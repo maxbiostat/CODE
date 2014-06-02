@@ -1,0 +1,131 @@
+# CAR02.r
+# Gibbs sampler for intrinsic CAR (ICAR) model
+# Nested Data (150 blocks, 25 subjects per group)
+# Generates Data from "pseudo-intrinsic" CAR by either
+#   setting spatial smoothing parameter rho=.9999 or add constant to Q matrix
+# Sept 8, 2010
+##################################
+###################
+# Load Packages   #
+# and Functions  #
+###################
+library(mvtnorm)
+library(lme4)  	# To compare with nonspatial random effects model
+
+##########################
+#   SIMULATE DATA UNDER	 #
+#   NON-INTRINSIC CAR  	 #
+#   WITH RHO ~ 1	 	 #
+##########################
+set.seed(090810)		
+n<-150			# Number of blocks
+nis<-rep(25,n) 		# Number of individuals per block; here it's balanced  
+id<-rep(1:n,nis)		
+N<-length(id) 		# Total number of subjects
+
+# Generate symmetric adjaceny matrix, A  
+A<-matrix(0,n,n)
+A[upper.tri(A,diag=F)]<-rbinom(n*(n-1)/2,1,.05)
+A<-A+t(A) 
+mi<-apply(A,1,sum)	# No. neighbors
+
+# Spatial effects, phi
+rho<-1			# Spatial dependence parameter = 1 for intrinsic CAR
+s2phi<-625		# Spatial Variance
+sdphi<-sqrt(s2phi)	# Spatial SD
+Q<-diag(mi)-rho*A + diag(.0001,n)	# NOTE 1: Add small constant to make Q non-singular
+# NOTE 2: Independent random effects ==> m=1 for all i and rho=0
+covphi<-sdphi^2*solve(Q) # Covariance of phis
+phi<-c(rmvnorm(1,sigma=covphi)) # Spatial Random Effects
+beta<-c(100,10)    	   # Fixed Effects
+x<-rnorm(N,5,2)
+X<-cbind(rep(1,N),x)
+p<-ncol(X)
+se<-20			   # Error SD (i.e., SD of Y|phi)
+y<-X%*%beta+rep(phi-mean(phi),each=nis)+rnorm(N,0,se)
+fit<-lmer(y~X-1+(1|id))  # Non-spatial random effect fit
+
+###############
+# Priors      #
+###############
+m0<-beta				# Prior Mean for beta
+prec0<-diag(.001,p)		# Prior Precision Matrix of beta (vague), independent
+a<-d<-b<-g<-.001			# Gamma hyperparms for updating taue and tauphi
+
+#########
+# Inits #
+#########
+tauphi<-1
+taue<-1
+beta<-rep(0,p)	
+phi<-rep(0,n)		
+Z<-matrix(0,N,n)			# Random effect "design matrix" used in updating phi
+for (i in 1:n) Z[id==i,i]<-1
+
+#################
+# Store Results #
+#################
+nsim<-2000
+Beta<-matrix(0,nsim,p)			# Fixed Effects Coeffs
+S2e<-S2phi<-rep(0,nsim)		# Variance Parms
+Phis<-matrix(0,nsim,n)
+###################
+# GIBBS SAMPLER	#
+###################
+tmp<-proc.time()
+for (i in 1:nsim) {
+  
+  # Update Beta 
+  Phic<-rep(phi-mean(phi),nis)		# Center to reduce autocorrelation with intercept
+  vbeta<-solve(prec0+taue*crossprod(X,X))
+  mbeta<-vbeta%*%(prec0%*%m0 + taue*crossprod(X,y-Phic))
+  Beta[i,]<-beta<-c(rmvnorm(1,mbeta,vbeta))
+  
+  # Update phi from joint posterior (can be slow for large n)
+  v<-solve(taue*diag(nis)+tauphi*Q)
+  m<-v%*%(taue*crossprod(Z,y-X%*%beta))
+  phi<-c(rmvnorm(1,m,v))
+  
+  # Udpate tauphi
+  tauphi<-rgamma(1,a+(n-1)/2,b+t(phi)%*%Q%*%phi/2)  # n-1 for number of islands
+  S2phi[i]<-1/tauphi
+  
+  # Udpate taue
+  Phi<-rep(phi,nis)
+  taue<-rgamma(1,d+N/2,g+crossprod(y-X%*%beta-Phi)/2)
+  S2e[i]<-1/taue
+  
+  if (i%%100==0) print(i)
+} 
+proc.time()-tmp
+
+###########
+# Results #
+###########
+mbeta<-apply(Beta[1001:nsim,],2,mean)
+sdphi<-mean(sqrt(S2phi[1001:nsim]))
+sde<-mean(sqrt(S2e[1001:nsim]))
+
+# Indpendent Random effects fit
+cat("Indpendent Random Effects Fit","\n")
+summary(fit)
+
+cat("Posterior Estimates","\n","beta = ", mbeta,"\n","SDphi = ",sdphi,"\n","SDe = ",sde)   
+
+par(mfrow=c(2,1))
+
+plot(1001:nsim,Beta[1001:nsim,1],type="l",col="lightgreen")
+abline(h=mbeta[1],col="blue")
+
+plot(1001:nsim,sqrt(S2phi[1001:nsim]),type="l",col="lightgreen")
+abline(h=sdphi,col="blue")
+
+n","SDphi = ",sdphi,"\n","SDe = ",sde)   
+
+par(mfrow=c(2,1))
+
+plot(1001:nsim,Beta[1001:nsim,1],type="l",col="lightgreen")
+abline(h=mbeta[1],col="blue")
+
+plot(1001:nsim,sqrt(S2phi[1001:nsim]),type="l",col="lightgreen")
+abline(h=sdphi,col="blue")

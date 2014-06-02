@@ -1,0 +1,10 @@
+M<-matrix(0,4,4)
+M[1,2]<-1
+M[1,3]<-1
+M[1,4]<-1
+M[3,4]<-1
+G<-graph.adjacency(M,mode=c("undirected"))
+plot(G)
+ecount(G)
+transitivity(G,,type=c("global"))
+# 

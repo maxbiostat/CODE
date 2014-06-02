@@ -1,0 +1,13 @@
+#!/usr/bin/bash
+export FFLAGS="-march=core2 -O3"
+export CFLAGS="-march=core2 -O3"
+export CXXFLAGS="-march=core2 -O3"
+export FCFLAGS="-march=core2 -O3"
+export MKL_LIB_PATH=/opt/intel/mkl/lib/intel64
+export LD_LIBRARY_PATH=$MKL_LIB_PATH
+export LDFLAGS="-L${MKL_LIB_PATH},-Bdirect,--hash-style=both,-Wl,-O1"
+export SHLIB_LDFLAGS="-lpthread"
+export MAIN_LDFLAGS="-lpthread"
+export MKL="-L${MKL_LIB_PATH} -lmkl_gf_lp64 -lmkl_gnu_thread -lmkl_lapack -lmkl_core -liomp5 -lpthread"
+./configure --with-tcltk --enable-R-shlib --with-recommended-packages --with-valgrind-instrumentation --enable-memory-profiling --with-system-bzlib --with-rgl --with-blas --with-lapack --enable-BLAS-shlib
+ make && make pdf && sudo make install

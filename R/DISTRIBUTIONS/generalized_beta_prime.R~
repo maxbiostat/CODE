@@ -1,0 +1,8 @@
+## Generates density values for a generalized beta prime distribution which arises in a certain problem of calculating the distribution
+## of R0 in a specific SIR epidemic model 
+# Let R0 be given by \frac{\beta N}{\gamma}. If \beta and \gamma are Gamma-distributed with parameters {k1,t1} and {k2,t2}, respectively
+# and N is a big positive constant, then R0 has the beta prime distribution () with parameters k1,t1,k2,t2 and N, given by the expression below
+# So, in this toy example, we can calculate the distribution analytically if we can represent our uncertainty about \beta and \gamma by means of Gamma random variables
+dbeta.prime<-function(x,k1,k2,t1,t2,N){
+ (x^(k1-1)* ((t2*x + N*t1)/(N*t1*t2))^(-(k1+k2)))/(beta(k1,k2)*((N*t1)^k1)*(t2^k2))
+}

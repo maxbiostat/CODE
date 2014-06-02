@@ -1,0 +1,6 @@
+#!/usr/bin/bash
+rm templot.jpg
+Rscript -e 'data<-read.table("temps.txt",F)$V1;jpeg("templot.jpg");plot(data,type="l",lwd=3,col=3);dev.off()' 
+display templot.jpg
+
+

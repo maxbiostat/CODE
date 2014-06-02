@@ -1,0 +1,8 @@
+#install.packages("rgdal")
+setwd("M:\\")
+library(sp);library(maptools);library(rgdal)
+wrld <- readOGR(".", "TM_WORLD_BORDERS-0.3")
+wrld_simpl <- readOGR(".", "TM_WORLD_BORDERS_SIMPL-0.3")
+wrld <- spChFIDs(wrld, as.character(wrld$ISO3))
+wrld_simpl <- spChFIDs(wrld_simpl, as.character(wrld_simpl$ISO3))
+plot(wrld_simpl, axes = TRUE, ylim = c(-0, 1),xlim=c(-80,-60), asp = 1)

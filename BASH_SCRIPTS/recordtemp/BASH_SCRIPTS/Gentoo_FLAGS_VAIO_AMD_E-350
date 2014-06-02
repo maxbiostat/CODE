@@ -1,0 +1,6 @@
+CHOST="x86_64-pc-linux-gnu -fno-3dnow"
+CFLAGS="-march=btver1 -mtune=btver1 -fno-3dnow"
+CXXFLAGS="${CFLAGS}"
+CHOST="i686-pc-linux-gnu"
+CFLAGS="-march=btver1 -mtune=btver1 -fno-3dnow"
+CXXFLAGS="${CFLAGS}"
