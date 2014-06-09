@@ -1,5 +1,5 @@
 #!/usr/bin/bash
-
+## This script provides a silly front-end to run the simulation study proposed in Carvalho, Struchiner & Bastos (2014).
 echo "Simulation name (please do not use spaces, use underlines instead) [ENTER]:"
 read nome
 echo $nome > nome.txt
@@ -28,7 +28,7 @@ echo $cam > cam.txt
 echo "Email (multiple addresses separates by a single space) [ENTER]:"
 read emei
 
-nice -n $legal  Rscript  ~/Downloads/verhulst_2G_simulation_study_cjs.R 
+nice -n $legal  Rscript  ~/Downloads/verhulst_simulation_study.R 
 
 rm nome.txt rep.txt mc.txt freec.txt cam.txt 
 
