@@ -28,7 +28,7 @@ Oswaldo Cruz Foundation}
 
 \begin{document}                                  
 \SweaveOpts{concordance=TRUE}
-\SweaveOpts{prefix.string=figures/figure}
+\SweaveOpts{prefix.string=FIGURES/figure}
 %
 \maketitle
 \begin{abstract}
@@ -38,9 +38,9 @@ Also, we derive the confidence bounds using the conditional distribution of \rr 
 \end{abstract}
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 <<echo=FALSE>>=
-source("../CODE/Rt_aux.r")
-source("../CODE/elicit_Rt_prior.R")
-dat <- read.csv("../DATA/dadojuntos_201433.csv", header=TRUE)
+source("CODE/Rt_aux.R")
+source("CODE/elicit_Rt_prior.R")
+dat <- read.csv("DATA/dadojuntos_201433.csv", header=TRUE)
 N <- length(unique(dat$SE))
 M <- matrix(dat$casos, nrow = N) # 'matrix' of cases, each column is a HPA (APS)
 cases <- rowSums(matrix(dat$casos, nrow = N))
@@ -165,7 +165,7 @@ We now show the application of the methods described above to dengue notificatio
 The data consists of weekly dengue notifications for \Sexpr{ncol(M)} Health Planning Areas (APS, in Portuguese) for the period 2010-2014.
 Figure~\ref{fig:casesperAPS} shows the data.
 We compute $c_{\alpha}(R_t)$ for the total (sum) number of notifications using the two approaches described, using a generation time of $3$ weeks and choose $a_0$ and $b_0$ such that $E[R_t] = 1/2$ and $Var(R_t) = 2$.
-The resulting estimates and $95\%$ confidence bounds are presented in Figure~\ref{fig:confidencetotals}
+The resulting estimates and $95\%$ confidence bounds are presented in Figure~\ref{fig:confidencetotals}.
 Finally, we compute $Pr(R_t > 1)$ using the two distributions discussed here (Figure~\ref{fig:pRt1}).
 
 \section{Final Remarks}
@@ -179,7 +179,7 @@ The code to implement the methods discussed and also to generate this report her
 
 \section{Acknowlegements}
 I am grateful to Dr. Leonardo Bastos for useful discussions and for spotting a bug in my earlier code.
-
+\newpage
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \begin{figure}[!h]
 \setkeys{Gin}{scale=.7}
@@ -191,7 +191,7 @@ legend(x="topright", legend = paste(unique(dat$APS)),
        col = 1:ncol(M), lty = 1, cex = .7, bty = "n" )
 @
 \end{center}
-\caption{Number of cases per HPA (APS)}
+\caption{Total number of dengue notifications per HPA (APS)}
 \label{fig:casesperAPS}
 \end{figure}
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
