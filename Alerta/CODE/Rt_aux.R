@@ -16,8 +16,8 @@ betaconf <- function(alpha = .95, x, n, a = 1, b = 1, CP = "FALSE"){
 # R = theta/(1-theta)
 ll <- function(x) x/(1-x)
 #############################
-Rt.beta <- function(d, gt = 3, alpha = .95, a0 = 2 , b0 = 3 ){
-  ## a0 and b0 chosen so that E[R_t] = 1 and Var(R_t) = 2 
+Rt.beta <- function(d, gt = 3, alpha = .95, a0 = 2 , b0 = 3){
+  ## Default a0 and b0 chosen so that E[R_t] = 1 and Var(R_t) = 2 
   ## gt = generation time, default 3 weeks
   ## alpha = *100% level of confidence
   N <- length(d)
@@ -43,6 +43,7 @@ Rt.beta <- function(d, gt = 3, alpha = .95, a0 = 2 , b0 = 3 ){
 Rt.gamma <- function(d, gt = 3, alpha = .95){
   ## It's all quite simple: we have the conditional distribution of R_{t}:
   ## p(R_{t}| J_{t}, J_{t + 1}) = (R_{t}*J_{t})^J_{t + 1} * exp(- R_{t}*J_{t})
+  ## Nishiura et al (2010) -- JRSInterface
   ## Lets just sample analytically from it, since its a(n unnormalised) 
   ## Gamma distribution  
   ## gt = generation time, default 3 weeks
