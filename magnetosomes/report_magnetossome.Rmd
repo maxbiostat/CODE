@@ -1,0 +1,109 @@
+---
+title: 'Technical Report : Bivariate Normal model for magnetossome biometry'
+author: 'Luiz Max de Carvalho, Programa de Computação Científica (PROCC), Fiocruz,
+  Brazil. '
+output: html_document
+---
+## Background
+
+In this brief report we will address the application of a bivariate normal random-intercept model to study the effect of induced magnetic field ("artificial hemisphere") and original cell phenotype -- either south- or north-oriented -- in magnetossome shape  and size, measured by shape factor and volume.
+The shape factor $s$ and volume $v$ of a total of $738$ magnetossomes from $60$ bacterial cells were measured.
+The biological question is to understand how the experimental conditions, i.e, original culture phenotype and induced magnetic dipole affect crystal morphometric characteristics.
+ 
+  Below are some exploratory plots of this data. 
+
+
+  These exploratory analyses suggest that: (i) the effects of  the experimental conditions seem to be different for magnetosome shape factor and volume; and (ii) there seems to be considerable heterogeneity of both magnetosome shape factor and volume between individual cells.
+
+## Methods
+
+This section details the statistical modeling of this data.
+A broad range of models will be explored and a Bayesian model selection criterion will be used to select between competing models.
+
+### The model
+
+  Let $\mathbf{Y} = \{ Y^{(s)},  Y^{(v)}\}$ be $N \times 2$ matrix containing the measurements.
+The two covariates represent the two experimental conditions, magnetic field $f$ and cell phenotype $p$, each of which have only two levels. ($f=$ NH/SH and $p=$TS/TN). 
+In this fashion, let  $\mathbf{X} =  \{ X_f,  X_p\}$ be the binary design matrix.
+Since both magnetosome shape factor and volume depend to some extent on the same measures (manetosome dimensions) it makes sense to investigate a model where the dimensions of $\mathbf{Y}$ are correlated.
+Also, between-cell variation and the interaction between magnetic field and cell phenotype can be important.
+
+  We thus propose bivariate normal hierarchical linear model with interactions to model the data at hand. 
+The likelihood of each observation pair $i$ from cell $j$, $\mathbf{Y_{ij}} = \{\mathbf{Y_{ij}^{(s)}}, \mathbf{Y_{ij}^{(v)}} \}$, is 
+$$\mathbf{Y_{ij}} \sim \mathcal{N}_2(\mathbf{\mu_{ij}}, \mathbf{\Sigma})$$
+$$\mathbf{\mu_{ij}^{(s)}} = \mathbf{\beta^{(s)}}\mathbf{X^{(s)}_{ij}} + \mathbf{\alpha^{(s)}} + Z^{(s)}_j$$
+$$\mathbf{\mu_{ij}^{(v)}} = \mathbf{\beta^{(v)}}\mathbf{X^{(v)}_{ij}} + \mathbf{\alpha^{(v)}} + Z^{(v)}_j$$
+where  $\mathcal{N_2}$ is the bivariate normal distribution and the varying intercepts $Z_j^{(s)} \sim \mathcal{N}(0, \tau^{(s)})$ and $Z_j^{(v)} \sim \mathcal{N}(0, \tau^{(v)})$.
+Interaction between predictors can be incorporated in a straightfoward manner and is omitted from notation for compactness.
+
+#### Priors
+
+To complete model specification we need to specify prior distributions for model parameters:
+$$\tau^{(s)}, \tau^{(v)} \sim \mathcal{G}(10^{-2}, 10^{-2})$$
+$$ \beta^{(s)}, \beta^{(v)},\alpha^{(s)}, \alpha^{(v)} \sim  \mathcal{N}(0, 10^{6})$$
+$$ \Sigma \sim \mathcal{IW}(2, \mathbf{\Omega})$$
+where $\mathcal{G}$ and $\mathcal{IW}$ are the Gamma and inverse Wishart distributions, respectively, and $\Omega$ is a $2 \times2$ matrix that roughly  describes the scale of the variances.
+For convenience we transform $\mathbf{Y}$ so that $E[\mathbf{Y^{(s)}}]=E[\mathbf{Y^{(v)}}]=0$ and $Var(\mathbf{Y^{(s)}})=Var(\mathbf{Y^{(v)}})=1$, and thus can set $\Omega$ to be the identity matrix.
+Moreover, this transformation makes the coefficients directly comparable.
+
+Finally, let $\mathbf{\theta} = \{ \beta^{(s)}, \beta^{(v)}, \alpha^{(s)}, \alpha^{(v)}, \tau^{(s)}, \tau^{(v)}, \Sigma \}$.
+We are interested in the posterior distribution of $\mathbf{\theta}$:
+$$ p(\mathbf{\theta}|\mathbf{Y}, \mathbf{X}) \propto l(\mathbf{Y}|\mathbf{X}, \mathbf{\theta}) \pi(\mathbf{\theta}) $$
+which we approximate using Markov chain Monte Carlo (MCMC) through the Hamiltonian Monte Carlo (HMC) techinique implemented in the **stan** package [CITA] of the R Statistical Computing Language [CITA].
+
+### Model selection
+
+The proposed model is rather complex and encompasses several simpler models that could also be plausible. 
+In order to select the most parsimonious model we employ the Widely Applicable Information criterion (WAIC) of Watanabe (2010) to evaluate competing models. 
+We compared correlated versus independent models, where the correlation coefficient between the dimensions of $\mathbf{Y}$, $\rho =\frac{\Sigma_{1,2}}{\sqrt{\Sigma_{1,1}\Sigma_{2,2}}}$ was estimated or set to zero.
+We also compared models with fixed intercepts, varying (random) intercepts and mixed (varying + fixed) intercepts which will be called henceforth fixed effects (FE), random effects (RE) and mixed effects (ME), respectively.
+Our analysis also included models with and without interactions between covariates.
+
+The tables below show the results of this model selection effort, in which a total of $12$ different models were compared.
+The WAIC of the best fitting models in each table are show in **bold**.
+All parameters are reported as posterior means (95\% posterior credibility intervals) obtained with $5000$ iterations of the HMC algorithm with $2500$ burn-in.
+
+
+     Parameter/Model     FE independent without interaction   FE independent with interaction   FE correlated without interaction   FE correlated with interaction
+  --------------------- ------------------------------------ --------------------------------- ----------------------------------- --------------------------------
+    $\beta_{f}^{(s)}$          -0.70 (-0.85 – -0.55)              -1.49 (-1.99 – -0.98 )              -0.70 (-0.86 – -0.55)             -1.47 (-1.99 – -0.94)
+    $\beta_{p}^{(s)}$           -0.10 (-0.26 – 0.05)              -0.83 ( -1.31 – -0.33 )             -0.10 (-0.25 – 0.06)              -0.81 ( -1.31 – -0.31)
+    $\beta_{f}^{(v)}$            0.47 (0.31 – 0.63)                 0.77 (0.23 – 1.28)                 0.47 (0.31 – 0.63)                 0.76 (0.20 – 1.28)
+    $\beta_{p}^{(v)}$            0.26 (0.10 – 0.41)                 0.53 (0.04 – 1.03)                 0.26 (0.10 – 0.41)                 0.52 (0.00 – 1.10)
+   $\beta_{int}^{(s)}$                   --                         0.49 (0.19 – 0.80)                         --                         0.49 (0.16 – 0.80)
+   $\beta_{int}^{(v)}$                   --                        -0.19 (-0.50 – -0.14)                       --                        -0.18 (-0.50 – 0.15)
+      $\alpha_{c}$               1.26 (1.00 – 1.53)                 2.37 (1.64 – 3.10)                 1.27 (1.00 – 1.63)                 2.35 (1.58 – 3.11)
+      $\alpha_{p}$             -1.16 (-1.41 – -0.90)               -1.58 (-2.32 – -0.83)              -1.16 (-1.43 – -0.88)             -1.56 (-2.33 – -0.76)
+         $\rho$                          --                                 --                        -0.10 (-0.18 – -0.03)             -0.10 (-0.17 – -0.02)
+          WAIC                        4019.24                             4012.1                             4014.2                            **4008.08**
+
+     Parameter/Model     RE independent without interaction   RE independent with interaction   RE correlated without interaction   RE correlated with interaction
+  --------------------- ------------------------------------ --------------------------------- ----------------------------------- --------------------------------
+    $\beta_{f}^{(s)}$          -0.28 (-0.54 – -0.01)               0.15 ( -0.16 – 0.46)               -0.29 (-0.54 – -0.02)              0.15 (-0.13 – 0.44)
+    $\beta_{p}^{(s)}$            0.24 (0.13 – 0.50)                 0.58 (0.31 – 0.82)                 0.25 (-0.01 – 0.49)                0.57 (0.32 – 0.82)
+    $\beta_{f}^{(v)}$           0.15 (-0.23 – 0.49)                 -0.34(-0.76 – 0.10)                 0.16 (0.05 –0.49)                -0.33 (-0.74 – 0.09)
+    $\beta_{p}^{(v)}$           -0.10 (-0.45 – 0.25)               -0.42(-0.78 – -0.08)               -0.11 (-0.41 – 0.20)              -0.41 (-0.53 – -0.08)
+   $\beta_{int}^{(s)}$                   --                        -0.44 (-0.64 – -0.24)                       --                       -0.44 (-0.62 – -0.26)
+   $\beta_{int}^{(v)}$                   --                         0.46 (0.21 – 0.73)                         --                         0.46 (0.18 – 0.74)
+      $\alpha_{c}$                       --                                 --                                 --                                 --
+      $\alpha_{p}$                       --                                 --                                 --                                 --
+         $\rho$                          --                                 --                        -0.03 (-0.11 – 0.04)               -0.03 (-0.11 – 0.04)
+          WAIC                        3775.895                           **3770.919**                           3777.594                           3771.239
+
+     Parameter/Model     ME independent without interaction   ME independent with interaction   ME correlated without interaction   ME correlated with interaction
+  --------------------- ------------------------------------ --------------------------------- ----------------------------------- --------------------------------
+    $\beta_{f}^{(s)}$          -0.65 (-0.88 – -0.41)               -1.45 (-2.21 – 0.70)              -0.65 ( -0.88 – -0.42)             -1.46 (-2.20 – -0.70)
+    $\beta_{p}^{(s)}$           -0.15 (-0.39 – 0.09)               -0.86 (-1.52 – -0.20)              -0.15 ( -0.38 – 0.09)             -0.86 (-1.55 – -0.16)
+    $\beta_{f}^{(v)}$            0.45 (0.33 – 0.78)                 0.62 (-0.67 – 1.82)                0.48 (0.13 – 0.83)                0.59 (-0.60 – 1.93)
+    $\beta_{p}^{(v)}$           0.30 (-0.04 – 0.64)                 0.43 (0.06 – 1.46)                 0.29 (-0.09 – 0.66)               0.41 (-0.70 – 1.57)
+   $\beta_{int}^{(s)}$                   –                          0.49 (0.06 – 0.92)                          –                         0.50 (0.04 – 0.95)
+   $\beta_{int}^{(v)}$                   –                         -0.09 (-0.80 – 0.67)                         –                        -0.08 (-0.86 – 0.63)
+      $\alpha_{c}$               1.28 (0.86 – 1.69)                 2.38 (1.32 – 3.42)                  1.28 (0.89 –1.67)                 2.38 (1.18 – 3.44)
+      $\alpha_{p}$             -1.19 (-1.78 – -0.59)               -1.42 (-3.09 – 0.41)               -1.21 (-1.87 – -0.57)              -1.38 (-3.19 – 0.37)
+         $\rho$                          –                                   –                        -0.03 ( -0.11 – 0.04)             -0.03 ( -0.11 – 0.04)
+          WAIC                       **3765.691**                           3765.927                           3767.651                           3766.962
+
+
+# Final remarks
+
+# References
