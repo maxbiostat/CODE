@@ -9,8 +9,8 @@
 # you can read specs from files or specify them here
 M <- 100  #as.numeric(read.table("rep.txt")) # number of replicates
 mc <- 5000 #as.numeric(read.table("mc.txt")) # number of iterations
-path <-"/home/max/exemplodaniel"  #as.character(read.table("cam.txt",as.is=T)) # path to save results
-nome <-"exemplo1" #as.character(read.table("nome.txt",as.is=T)) # simulation name
+path <-"/home/max/exemplodaniel"  #as.character(read.table("cam.txt", as.is = TRUE)) # path to save results
+nome <-"exemplo1" #as.character(read.table("nome.txt", as.is = TRUE)) # simulation name
 freec <- 1 #as.numeric(read.table("freec.txt")) # number of freecores
 ##  True parameters
 b0 <- .5
@@ -26,7 +26,7 @@ for (k in 1:M){
 cat("Generating data...",k/M*100," % complete","\n")
  x1 <- rnorm(N)
  x2 <- rbinom (N, 1, .5)
- y  <- b0 + b1*x1 + b2*x2 + rnorm(N, m=0, tau)
+ y  <- b0 + b1*x1 + b2*x2 + rnorm(N, m = 0, tau) # random effects
 data.sets[[k]]<- list( Y = y, X1 = x1, X2 = x2, N = N)
 }
 #lapply(data.sets, function(x) hist(x$Y) )
@@ -63,7 +63,7 @@ for (n in 1:N){
 }
 '
 inits <- function(){
-list(b0 = 1, b1 = 1, b2 = 1, tau=1E-04)
+list(b0 = 1, b1 = 1, b2 = 1, tau = 1E-04)
 }
 #
 linear <- stan(model_code = linear_code, data = data.sets[[1]],# any data set would do
@@ -74,13 +74,13 @@ linear <- stan(model_code = linear_code, data = data.sets[[1]],# any data set wo
 ########################
 
 summarize<-function(x){ # function to extract estimates from a mcmc
-  return(c(m=mean(x), md = median(x), L = quantile(x,.025), U = quantile(x,.975)))
+  return(c(m = mean(x), md = median(x), L = quantile(x, .025), U = quantile(x, .975)))
 }
 ##
 estimate <- function(x){ # function to perform estimation: for a data set 'x' 
                          # sample from the posterior distribution using mcmc and
                          # then use 'summarize()' to get the estimates and CIs
-  mcmc <- stan(fit = linear, data = x, iter = mc, chains = 1,thin = ceiling(mc/200),
+  mcmc <- stan(fit = linear, data = x, iter = mc, chains = 1, thin = ceiling(mc/200),
              init = list(inits()),verbose = FALSE)@sim$samples[[1]][1:4]
   write.table(mcmc,)
     return(as.data.frame(simplify2array(lapply(mcmc, summarize))))
@@ -90,25 +90,29 @@ estimate <- function(x){ # function to perform estimation: for a data set 'x'
 ###########################
 library(parallel)
 cores <- detectCores()-freec # total minus the reserved cores
-simu <- mclapply(data.sets,estimate,mc.cores=cores)
+simu <- mclapply(data.sets, estimate, mc.cores = cores)
 ###
-means<-medians<-lowers<-uppers<-data.frame(matrix(NA,M,4)) # empty tables to store the results
-names(means)<-names(medians)<-names(lowers)<-names(uppers)<-c("b0","b1","b2","tau")
+means <- medians <-lowers <- uppers <- data.frame(matrix(NA, M, 4)) # empty tables to store the results
+names(means) <- names(medians) <- names(lowers) <- names(uppers) <- c("b0", "b1", "b2", "tau")
 for (c in 1:M){
-  means[c,] <- simu[[c]][1,]
-  medians[c,] <- simu[[c]][2,]
-  lowers[c,] <- simu[[c]][3,]
-  uppers[c,] <- simu[[c]][4,]
+  means[c, ] <- simu[[c]][1, ]
+  medians[c, ] <- simu[[c]][2, ]
+  lowers[c, ] <- simu[[c]][3, ]
+  uppers[c, ] <- simu[[c]][4, ]
 }
 head(means)
 hist(means$b0, xlab = expression(beta[0]), main = expression(beta[0]) )
-abline(v=b0, lwd = 4, lty = 2)
+abline(v = b0, lwd = 4, lty = 2)
 hist(means$b1, xlab = expression(beta[1]) , main = expression(beta[1]))
-abline(v=b1, lwd = 4, lty = 2)
+abline(v = b1, lwd = 4, lty = 2)
 hist(means$b2, xlab = expression(beta[2]) , main = expression(beta[2]))
-abline(v=b2, lwd = 4, lty = 2)
+abline(v = b2, lwd = 4, lty = 2)
 ##
-write.table(means,file=paste(path,"/",nome,"_means.txt",sep=""),row.names=FALSE,sep="\t")
-write.table(medians,file=paste(path,"/",nome,"_means.txt",sep=""),row.names=FALSE,sep="\t")
-write.table(lowers,file=paste(path,"/",nome,"_lowers.txt",sep=""),row.names=FALSE,sep="\t")
-write.table(uppers,file=paste(path,"/",nome,"_uppers.txt",sep=""),row.names=FALSE,sep="\t")
+write.table(means, file = paste(path,"/",nome, "_means.txt", sep = ""),
+            row.names = FALSE, sep = "\t")
+write.table(medians, file = paste(path,"/",nome, "_means.txt", sep = ""),
+            row.names = FALSE, sep = "\t")
+write.table(lowers, file = paste(path,"/",nome, "_lowers.txt", sep = ""),
+            row.names = FALSE, sep = "\t")
+write.table(uppers, file = paste(path,"/",nome, "_uppers.txt", sep = ""),
+            row.names = FALSE,sep = "\t")
