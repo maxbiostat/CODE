@@ -2,14 +2,14 @@
 # Last updated: 09/06/2014 
 ### WARNING: please note that the data set 'Rhodi_temp_data.txt' will be made available soon, due to disclosure issues with another ongoing publication. 
 posterior <- data.frame(read.table("DATA/posterior_real.txt", TRUE))
-M <- 10000
+G <- 10000
 prior <- data.frame( # prior distributions for r(T) and K(T) parameters
-  a1 = rnorm(M, 25, 10),
-  b1 = rgamma(M, 4, 1/5),
-  c1 = rgamma(M, 1, 1/1000),
-  a2 = rnorm(M, 25, 10),
-  b2 = rgamma(M, 4, 1/5),
-  c2 = rnorm(M, .5, 2)
+  a1 = rnorm(G, 25, 10),
+  b1 = rgamma(G, 4, 1/5),
+  c1 = rgamma(G, 1, 1/1000),
+  a2 = rnorm(G, 25, 10),
+  b2 = rgamma(G, 4, 1/5),
+  c2 = rnorm(G, .5, 2)
 )
 ############
 N <- 1000 #replicates
@@ -17,14 +17,16 @@ temps <-seq(16, 40, .5)
 times <- 1:40
 No <- 30
 priorP <- postP <- array(data = NA, dim = c(length(times), length(temps), N))
-M <- function(a1, a2, b1, b2, c1, c2, time, Temp, No){ # deterministic model
+M <- function(a1, a2, b1, b2, c1, c2, time, Temp, No){ # deterministic model M(x; \theta)
   K <- c1*exp(- ((Temp-a1)^2)/b1)
+  if(K < No){K <- No} # "rejection" step: K cant be greater than N_0
   r <- c2*exp(- ((Temp-a2)^2)/b2)
   P <- (K)/(1+ ((K-No)/No) * exp (-r*time))
   return(P)
 }
 ##
 # Sampling 
+system.time(
 for(rep in 1:N){
   for(temp in temps){
     for(time in times){
@@ -54,6 +56,7 @@ for(rep in 1:N){
     }
   }
 }
+)
 # Summarizing
 extmean <- function(x,N){ rowMeans(matrix(x, ncol = N))}
 extmedian <- function(x,N){apply(matrix(x, ncol = N), 1, median) }
