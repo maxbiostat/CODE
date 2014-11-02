@@ -16,7 +16,7 @@ red.rm <- function(bank){
   n <- dim(bank)[1];C <- dim(bank)[2]
   grid <- subset(expand.grid(1:n, 1:n), Var1! = Var2)
   ms <- rep(NA, nrow(grid))
-  for (i in 1:nrow(grid)){# computing identity scores,  suffers from combinatorial explosion,  though :(
+  for (i in 1:nrow(grid)){# computing identity scores.  suffers from combinatorial explosion,  though :(
     ms[i] <- sum(bank[grid[i, 1], ] == bank[grid[i, 2], ])
   }
   if(length(which(ms == C)) == 0)stop("No duplicates found")

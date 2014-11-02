@@ -5,7 +5,7 @@ library(ape)
 metadata <- data.frame(read.table("~/Dropbox/TERA/DATA/WORLD_FMDV/info_data_1811.txt", TRUE))
 database <- read.dna("~/Dropbox/TERA/DATA/WORLD_FMDV/batch_WRLDFMD_ALN_GAPFREE_GEO.fasta", format = "fasta")
 #########
-metaA<- subset(metadata, SEROTYPE == "A") # extract the GenBankIDs of the serotype O sequences
+metaA <- subset(metadata, SEROTYPE == "A") # extract the GenBankIDs of the serotype O sequences
 whichA <- metaA$ACCN
 posA <- vector(length = length(whichA))
 for (a in whichA){
@@ -14,7 +14,7 @@ for (a in whichA){
 }
 databaseA <- database[posA, ]
 #########
-metaO<- subset(metadata, SEROTYPE == "O") # extract the GenBankIDs of the serotype O sequences
+metaO <- subset(metadata, SEROTYPE == "O") # extract the GenBankIDs of the serotype O sequences
 whichO <- metaO$ACCN
 posO <- vector(length = length(whichO))
 for (o in whichO){
