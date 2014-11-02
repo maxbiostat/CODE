@@ -1,0 +1,1 @@
+These little scripts produce some of the figures in Vasconcellos et al (2014): ction with Leptomonas wallacei affects physiology and population dynamics of  Oncopeltus fasciatus: an insight into parasitism
