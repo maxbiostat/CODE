@@ -1,4 +1,5 @@
-### This script is a companion (aux) to make_figures.R
+### This script is a companion (aux) to make_mathmod_figures.R
+### Parameter values were extracted from development (stage passing) data collected in the laboratory
 ### Copyleft (or the one to blame): Carvalho, LMF (2014)
 
 #############

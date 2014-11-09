@@ -1,3 +1,9 @@
+### This script produces the survival analysis presented in Vasconcellos et al. (2014)
+### We estimate survival curves for four experimental groups using a Weibull regression model
+### The objective is to estimates the curves and test for differences in survival among 
+### infected and uninfected adult Oncopeltus males and females 
+## Copyleft (or the one to blame): Carvalho, LMF (2014)
+## last updated: 09/11/2014
 library(survival);library(ggplot2)
 source("weibull-reg_aux.R")
 survdata <- data.frame(read.table("data/oncosurv.txt", header = TRUE))

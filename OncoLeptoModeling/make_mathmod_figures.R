@@ -1,5 +1,6 @@
 ### This script will produce the figures in Vasconcellos et al. (2014)
 ### Copyleft (or the one to blame): Carvalho, LMF (2014)
+### For more details on model formulation, please see the main text
 source("oncolepto_params.R")
 library(deSolve)
 ### Our ODE systems 

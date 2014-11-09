@@ -1,3 +1,10 @@
+### This script gives part of the morphometric analyses in Vasconcellos et al. (2014).
+### First we use principal components analysis (PCA) to obtain orthogonal factors from the morphometric data.
+### These factors represent indenpendent morphologic dimensions and we identified the first to be connected with overall size.
+### We then use the first component as a predictor for infectious status, while controling for gender (sex) differences.
+### This last step is carried out using a binary generalised linear model (GLM) with a logit link function.  
+## Copyleft (or the one to blame): Carvalho, LMF (2014).
+## last updated: 09/11/2014
 library(FactoMineR); library(arm);library(ggplot2)
 dataA <- data.frame(read.table("data/plasticity.txt", header = TRUE))
 dataA$STATUS <- factor(dataA$STATUS)

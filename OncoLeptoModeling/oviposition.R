@@ -1,3 +1,7 @@
+### This script implements the oviposition analysis presented in Vasconcellos et al. (2014)
+### We model daily oviposition counts from Oncopeltus females using a zero-inflated Poisson (ZIP) generalised linear model (GLM)  
+## Copyleft (or the one to blame): Carvalho, LMF (2014)
+## last updated: 09/11/2014
 ovi <- data.frame(read.table("data/oncopeltus_oviposition.csv", header = TRUE))
 ovi$STATUS <- factor(ovi$STATUS)
 library(pscl); library(ggplot2)
