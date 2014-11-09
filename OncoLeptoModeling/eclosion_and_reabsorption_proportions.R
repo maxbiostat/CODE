@@ -1,5 +1,6 @@
 library(ggplot2)
-betaconf<-function(alpha, x, n, a=1, b=1, CP="FALSE"){
+betaconf<-function(alpha, x, n, a = 1, b = 1, CP = "FALSE"){
+  ## Will construct (1-alpha)% confidence intervals for p = x/n using the beta distribution
   if(CP=="TRUE"){  
     lower <- 1 - qbeta(1-(alpha/2), n + x - 1, x)
     upper <- 1 - qbeta(alpha/2, n - x, x + 1)
@@ -8,8 +9,8 @@ betaconf<-function(alpha, x, n, a=1, b=1, CP="FALSE"){
     upper <- qbeta(1-(alpha/2), a + x, b + n - x)  
   } 
   return(c(lower, upper))
-  #CP stands for Clopper-Pearson
-  #Default is 'Bayesian' with an uniform prior over p (a=b=1)
+  # CP stands for Clopper-Pearson
+  # Default is 'Bayesian' with an uniform prior over p (a=b=1)
 }
 # The data
 outE <- cbind(c(91, 29),c(95, 14))# Eclosion
