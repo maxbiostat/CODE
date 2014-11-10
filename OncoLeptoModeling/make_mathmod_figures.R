@@ -92,7 +92,7 @@ matplot(times, out.SD.inf/out.SD.ref, type = "l", xlab = "Time (days)", ylab = "
 abline(h = 1, lty = 2, lwd = 1)
 legend(x = 30, y = 3 , legend = c("Eggs", "Stage_1", "Stage_2", "Stage_3"), 
        lwd = 2, cex = 1, col = pal2[1:3], horiz = FALSE, bty = "n") 
-legend(x = 47 , y = 3 , legend = c("Stage_4", "Stage_5", "Males", "Females"),
+legend(x = 47 , y = 3 , legend = c("Stage_4", "Stage_5","Females", "Males"),
        lwd = 2, cex = .8, col = pal2[4:8], horiz = FALSE, bty = "n")
 dev.off()
 # Total population
