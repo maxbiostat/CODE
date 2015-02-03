@@ -8,7 +8,7 @@ MJ.gen <- function(states, from, to, file){
     mjmatrix <- mjmatrix.b 
     mjmatrix[i+1] <- 1
     blocks[i] <- paste(
-      paste("<parameter id=", dQuote(paste("from", grid[i, 1], "to", grid[i, 2], sep="_")), sep="")
+      paste("<parameter id=", dQuote(paste("from", grid[i, 1], "to", grid[i, 2], sep="_")), sep = "")
       , "value=", 
       dQuote(paste(as.vector(mjmatrix), collapse=" ")), 
       paste("/>"),            
@@ -22,7 +22,7 @@ MJ.gen <- function(states, from, to, file){
       diag(mjmatrix) <- 0 
       mjmatrix <- as.vector(mjmatrix)
       froms[j] <- paste(
-        paste("<parameter id=", dQuote(paste("from", from[j], sep="_")), sep="")
+        paste("<parameter id=", dQuote(paste("from", from[j], sep = "_")), sep = "")
         , "value=", 
         dQuote(paste(as.vector(mjmatrix), collapse=" ")), 
         paste("/>"),            
