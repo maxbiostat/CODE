@@ -42,10 +42,9 @@ Statistics by number of factors
 15 0.40 0.68 0.0172 336   746  3.4e-33      12 0.90 0.028 -1738  -670     2.1    395 0.012 0.019 -2089
 
 =====================
-> a
+> alpha(x = M42$rho)
 
 Reliability analysis   
-Call: alpha(x = M42$rho)
 
   raw_alpha std.alpha G6(smc) average_r S/N
       0.88      0.88    0.91      0.15 7.1
@@ -171,8 +170,6 @@ legenda para as figuras com os cargos
 7. Profissional administrativo / Profissional manutenção / Profissional de gestão
 
 ====================
-
-> # Poisson GLM
 > m1 <- glm(NAc ~ factor(UN) + IDADE + factor(SEXO) + factor(TURNO) +
 +           factor(CARGOORD)  + TEMPOHOSP + TEMPOUNI, data = datascores, family = "poisson")
 > summary(m1)
@@ -209,7 +206,7 @@ Signif. codes:  0 ‘***’ 0.001 ‘**’ 0.01 ‘*’ 0.05 ‘.’ 0.1 ‘ ’
 
 (Dispersion parameter for poisson family taken to be 1)
 
-    Null deviance: 6076.6  on 1469  degrees of freedom
+Null deviance: 6076.6  on 1469  degrees of freedom
 Residual deviance: 5945.7  on 1454  degrees of freedom
   (155 observations deleted due to missingness)
 AIC: 7122.4
@@ -298,6 +295,7 @@ Residual deviance: 555330  on 1454  degrees of freedom
 AIC: 12929
 
 Number of Fisher Scoring iterations: 2
+
 ==========================
 
 > m4 <- clm(factor(SCORE) ~ factor(UN) + IDADE + factor(SEXO) + factor(TURNO) + TEMPOHOSP + TEMPOUNI, data = data)
@@ -320,10 +318,10 @@ factor(TURNO)T  -0.018888   0.131875  -0.143   0.8861
 factor(TURNO)TN  0.036781   0.215716   0.171   0.8646  
 TEMPOHOSP       -0.071866   0.063066  -1.140   0.2545  
 TEMPOUNI         0.044336   0.063715   0.696   0.4865  
----
 Signif. codes:  0 ‘***’ 0.001 ‘**’ 0.01 ‘*’ 0.05 ‘.’ 0.1 ‘ ’ 1
 
 ==============================
+
 > summary(cfa.1)
 
  Model Chisquare =  5480.065   Df =  819 Pr(>Chisq) = 0
