@@ -46,11 +46,11 @@ Statistics by number of factors
 
 Reliability analysis   
 
-  raw_alpha std.alpha G6(smc) average_r S/N
-      0.88      0.88    0.91      0.15 7.1
+  raw.alpha std.alpha G6(smc) average_r S/N
+  0.88      0.88    0.91      0.15 7.1
 
  Reliability if an item is dropped:
-     raw_alpha std.alpha G6(smc) average_r S/N
+     raw.alpha std.alpha G6(smc) average_r S/N
 A1        0.88      0.88    0.91      0.15 7.0
 A2        0.88      0.88    0.91      0.15 7.1
 A3        0.88      0.88    0.91      0.15 7.0
