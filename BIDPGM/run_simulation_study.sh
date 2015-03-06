@@ -25,7 +25,7 @@ echo $cam > cam.txt
 # TODO: create default
 # TODO: offer option of no logs
 
-echo "Email (multiple addresses separates by a single space) [ENTER]:"
+echo "Email (multiple addresses separated by a single space) [ENTER]:"
 read emei
 
 nice -n $legal  Rscript  ~/Downloads/verhulst_simulation_study.R 
