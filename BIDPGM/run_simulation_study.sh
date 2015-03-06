@@ -1,5 +1,5 @@
 #!/usr/bin/bash
-## This script provides a silly front-end to run the simulation study proposed in Carvalho, Struchiner & Bastos (2014).
+## This script provides a silly front-end to run the simulation study proposed in Carvalho, Struchiner & Bastos (2015).
 echo "Simulation name (please do not use spaces, use underlines instead) [ENTER]:"
 read nome
 echo $nome > nome.txt
