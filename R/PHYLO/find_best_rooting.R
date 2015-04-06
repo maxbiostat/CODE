@@ -96,7 +96,7 @@ find_best_rooting <- function(tree, ages = NULL, heuristics = FALSE, loss = "res
   ##End documentation############
   if(is.null(ages)){ ages <- as.numeric(unlist(lapply(strsplit(tree$tip.label, "_"), function(x) x[3]))) } 
   cat("Date range:", range(ages), "\n")
-  
+  tree <- unroot(tree)
   tree <- multi2di(tree, random = TRUE)
   nodes <- seq_len(Nedge(tree))
   if(optim){
