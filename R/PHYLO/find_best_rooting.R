@@ -94,7 +94,7 @@ find_best_rooting <- function(tree, ages = NULL, heuristics = FALSE, loss = "res
   # Note: it expects labels to be separated by a '_'  and the date to be the THIRD field.
   # heuristics = try only old branches/nodes? Potentially speeds up things.
   ##End documentation############
-  if(is.null(ages)){ ages <- as.numeric(unlist(lapply(strsplit(tree$tip.label, "_"), function(x) x[3]))) } 
+  if(is.null(ages)){ ages <- get.ages(tree) } 
   cat("Date range:", range(ages), "\n")
   tree <- unroot(tree)
   tree <- multi2di(tree, random = TRUE)
