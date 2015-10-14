@@ -20,18 +20,15 @@ reroot.p <- function(tree, node.number, proportion){ ## re-roots the tree at a n
                 edge.length = c(tree$edge.length[match(node.number, tree$edge[, 2])]-position, position), Nnode = 1)
     class(tr2) <- "phylo"
     tr <- bind.tree(tr2, tr1, where = which(tr2$tip.label == "NA"))
+    tr <- reorder.phylo(x = tr, order = "postorder")
   }
   return(tr)
 }
-# set.seed(324453)
-# t5 <- rmtree(N = 1, n = 5, rooted = FALSE)[[1]]; plot(t5)
-# for (p in seq(.1, 1, .1)){
-#   plot( RDV(reroot.p(t5, node.number = 1, proportion = p)))
-# #   plot(reroot.p(t5, node.number = 1, proportion = p))
-# }
 #################
-opt.p.branch <- function(p, inode, dates, tr, loss = "residuals"){ # takes a proportion and a node number and returns the objective function value 
+opt.p.branch <- function(p, inode, tr, loss = "residuals"){ # takes a proportion and a node number and returns the objective function value 
   temp.tree <- reroot.p(tr, node.number = inode, proportion = p)
+  temp.tree <- reorder.phylo(x = temp.tree, order = "postorder")
+  dates <- get.ages(tree = temp.tree)
   temp.rdvs <- RDV(temp.tree)
   reg <- lm(temp.rdvs~dates)
   if(coef(reg)[2]<0){
@@ -44,8 +41,8 @@ opt.p.branch <- function(p, inode, dates, tr, loss = "residuals"){ # takes a pro
       if(loss == "Rsquared"){
         return(-summary(reg)$r.squared)
       }else{
-        if(loss == "cor"){
-          return(-abs(cor(temp.rdvs, dates)))
+        if(loss == "correlation"){
+          return(-cor(temp.rdvs, dates))
         }else{
           break("Please specify loss function")
         }
@@ -74,8 +71,9 @@ give.alpha <- function(vd, vt, cs, m, bounded = TRUE){
 #################
 get.alpha <- function(tr, node, loss = "residuals"){ ## Extracts the necessary components from the tree and applies give.alpha().  
   ## For now relies on a horrendous hack to get the indicators, for lack of intelligence of its creator... ;0)
-  base.tree <- reroot.p(tr, node = node, p = 0)
-  shift.tree <- reroot.p(tree = tr, node.number = node, p = .5)
+  Tree <- reorder.phylo(x = tr, order = "postorder")
+  base.tree <- reroot.p(tree = Tree, node = node, p = 0)
+  shift.tree <- reroot.p(tree = Tree, node.number = node, p = .5)
   rdvs <- RDV(base.tree)
   diffs <- as.numeric(RDV(shift.tree)-rdvs)
   inds <-  ifelse(diffs>0, 1, 0) ## who "will" be added 
@@ -84,26 +82,28 @@ get.alpha <- function(tr, node, loss = "residuals"){ ## Extracts the necessary c
   a <- give.alpha(vd = rdvs, vt = times, cs = inds, m = blength, bounded = TRUE)
   return(list(alpha = a,
               loss = opt.p.branch(p = a,
-                                  inode = node , dates = times, tr = tr, loss = loss)))
+                                  inode = node, tr = Tree, loss = loss)))
 }
 #################
-find_best_rooting <- function(tree, ages = NULL, heuristics = FALSE, loss = "residuals", optim = FALSE){ ## Main function that wraps that up
-  ## Begin documentation#########
+find_best_rooting <- function(tree, heuristics = FALSE, loss = "residuals", Optim = FALSE){ ## Main function that wraps that up
+  #### Begin documentation ########
   # tree = a phylogenetic tree with well formatted tip.labels.
-  # ages are the tip ages. if NULL the function will try to extract them from the tip names.
-  # Note: it expects labels to be separated by a '_'  and the date to be the THIRD field.
+  # WARNING: PLEASE modify the function get.ages() to ensure it works for your tip labels!
+  # Note: vy default, it expects labels to be separated by a '_'  and the date to be the THIRD field.
   # heuristics = try only old branches/nodes? Potentially speeds up things.
-  ##End documentation############
-  if(is.null(ages)){ ages <- get.ages(tree) } 
-  cat("Date range:", range(ages), "\n")
+  # what kind of 'loss' to use? Options are mean squared 'residuals', 'correlation' or 'Rsquared'.
+  # 'Optim': use numerical optimisation? Defaults to FALSE and uses an analytical solution instead.
+  #### End documentation ##########
+  cat("Date range:", range(get.ages(tree)), "\n")
   tree <- unroot(tree)
   tree <- multi2di(tree, random = TRUE)
+  tree <- reorder.phylo(x = tree, order = "postorder")
   nodes <- setdiff(seq_len(Nedge(tree)), Ntip(tree) + 1)
-  if(optim){
+  if(Optim){
     best.ps <- lapply(nodes,
                       function(j){
                         cat("Doing node", j, "\n")
-                        return(optimize(opt.p.branch, c(0, 1), tol = 1E-8, inode = j, dates = ages, tr = tree, loss = loss))
+                        return(optimise(opt.p.branch, c(0, 1), tol = 1E-8, inode = j, tr = tree, loss = loss))
                       }
     ) 
     node.p <- unlist(lapply(best.ps, function(x) x$minimum))
@@ -122,10 +122,13 @@ find_best_rooting <- function(tree, ages = NULL, heuristics = FALSE, loss = "res
   cand.nodes <- nodes[which(loss.nodes == min.nodes)]
   cand.ps <- node.p[which(loss.nodes == min.nodes)]
   result.tree <- reroot.p(tree, node = max(cand.nodes),  proportion = node.p[match(max(cand.nodes), nodes)])
-  result.reg <- lm(RDV(result.tree)~ages) 
+  result.reg <- lm(RDV(result.tree)~get.ages(result.tree)) 
   return(
-    list(best.root.node = max(cand.nodes), lm = result.reg, tree = result.tree,
+    list(minObj = min.nodes,
+         possibleNodes = cand.nodes,
+         losses = loss.nodes,
+         best.root.node = max(cand.nodes), lm = result.reg, tree = result.tree,
          proportion = node.p[match(max(cand.nodes), nodes)],
-         table = data.frame(rdv = RDV(result.tree), dates = ages, residuals = result.reg$residuals))
+         table = data.frame(rdv = RDV(result.tree), dates = get.ages(result.tree), residuals = result.reg$residuals))
   )  
 } 
