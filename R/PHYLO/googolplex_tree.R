@@ -22,9 +22,10 @@ find.n <- function(y, rooted = TRUE){
     return(abs(log(ty)-app))
   }
   res <- optimize(f = app.y, c(3, 1E+8), tol = 1E-8, ty = y)
-  cat("(log)Error:", res$objective, "\n")
+  cat("(log)Deviance:", res$objective, "\n")
   return(ceiling(res$minimum))
 }
 ##
-find.n(1E+100)
-find.n(1E+81)
+find.n(2E+8) ## How many taxa to have one tree per Brazilian?
+find.n(7E+9) ## How many taxa to have one tree per human being on Earth?
+find.n(1E+81) ## How many taxa to have one tree per particle in the observable Universe?
