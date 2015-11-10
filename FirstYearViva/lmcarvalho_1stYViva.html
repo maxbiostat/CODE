@@ -18,10 +18,15 @@
       }
     .l-col{
         display: inline-block;
+	float: center;
       }
       .footnote {
         position: absolute;
         bottom: 3em;
+      }
+     a {
+    	color: yellow;
+	text-decoration: underline;
       }
      .highlight {
        color: green
@@ -184,21 +189,9 @@ class: simpleBlack
 .right-column[
 - How do the various models of sequence evolution capture time signal for various viruses?
 ]
-.right[
-<div class="l-grid">
-    <ul>
-        <li class="l-col l-size1of4">
-            <div id="pan1">
-                <img src="figures/rdvModelFlu.png" width="270" height="270"/>
-            </div>
-        </li>
-        <li class="l-col l-size1of4">
-            <div id="pan2">
-                <img src="figures/rdvModelHIV.png" width="270" height="270"/>
-            </div>
-        </li>
-    </ul>
-</div>
+.center[
+<img src="figures/rdvModelFlu.png" width="270" height="270"/>
+<img src="figures/rdvModelHIV.png" width="270" height="270"/>
 ]
 ---
 class: simpleBlack
@@ -206,14 +199,14 @@ class: simpleBlack
 
 - Finish TC manuscript;
 - Run "partial trees" analysis: set of sequences -> add one at a time and estimate phylogenies -> plot against sampling time.
-- (Bayesian) posterior predictive checks for the tip dates, in the spirit of [Duchene et al. 2015](http://mbe.oxfordjournals.org/content/early/2015/07/10/molbev.msv154)
+- (Bayesian) posterior predictive checks for the tip dates, in the spirit of [Duchene et al. 2015](http://mbe.oxfordjournals.org/content/early/2015/07/10/molbev.msv154).
 
 ---
 class: simpleBlack
 ## Novel time-tree proposals for Bayesian phylogenetics
 
 - Phylogenetic inference is a hard problem;
-	- You only need 53 taxa to have about as many possible trees as there are particules in the observable Universe!
+	- You only need 53 taxa to have about as many possible trees as there are particles in the observable Universe!
 
 - We need to .highlight[efficiently] traverse tree space in order to obtain good estimates;
 	- Efficiency needs to be defined not only in statistical terms, but also in terms of .highlight[wall clock] time; 
@@ -227,7 +220,7 @@ class: simpleBlack
 ---
 class: simpleBlack
 # SubTreeJump
-A .highlightR[height-preserving] move (proposal) that depends on tuning parameter &#945 that controls how the probability of moving to a node far away from the current position.
+A .highlightR[height-preserving] move (proposal) that depends on tuning parameter &#945 that controls the probability of moving to a node far away from the current position.
 
 .center[<img src="figures/SubTreeJump.gif" width="450" height="450">]
 ---
@@ -274,6 +267,8 @@ class: simpleBlack
 
 In special to Andrew, for the patience and support. 
 An honourable mention to Gytis and Matthew.
+
+.center[<img src="figures/South_Park_Phylogenetic_Network.png" width="300" height="300">]
 
 .footnote[created with [remark](https://github.com/gnab/remark)]
 
