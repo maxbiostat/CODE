@@ -142,7 +142,8 @@ becoming
 </scaleOperator>
 ...
 ```
-Further adjustments to the priors and log blocks would follow in a similar fashion.
+Further adjustments to the "priors" and "log" blocks would follow in a similar fashion.
+This is what I would call the _trivial_ extensibility of BEAST. Let's now look at a slightly less trivial way of extending BEAST.
 
 ## Developing stuff for BEAST: an example
 
