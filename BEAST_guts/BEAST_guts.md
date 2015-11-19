@@ -191,7 +191,9 @@ public class SubtreeJumpOperatorParser extends AbstractXMLObjectParser {
 
     public String getParserName() {
         return SUBTREE_JUMP;
-    } ...
+    }
+   ...
+}   
 ```
 So in the end, one can just add 
 ```xml
