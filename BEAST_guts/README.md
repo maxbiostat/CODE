@@ -1,1 +1,1 @@
-### This is my "talk" at [Ashworth Code Monkeys]() about [BEAST]() and how it works internally.
+### This is my "talk" at [Ashworth Code Monkeys](https://groups.google.com/forum/#!forum/ashworth-code-monkeys) about [BEAST](http://beast.bio.ed.ac.uk/) and how it works internally.
