@@ -28,6 +28,8 @@ This is what we informally call "BEAST 1", the original BEAST.
 [Alexei Drummond](http://compevol.auckland.ac.nz/dr-alexei-drummond/) and his team have developed [BEAST2](http://beast2.org/) that features a more modular, plugin-base architecture where users can contribute plugins implementing a plethora of phylogenetic models.
 The development repo for BEAST2 sits [here](https://github.com/compevol/beast2).
 
+### BEAGLE
+
 ## How does it work?
 BEAST feeds on ~~souls~~ XML input files that are supposed specify everything you need to run MCMC and get a posterior distribution for your parameters:
 - Data!
@@ -36,13 +38,24 @@ BEAST feeds on ~~souls~~ XML input files that are supposed specify everything yo
 - Operators;
 - Number of iterations, sampling frequency and auto-optimisation options.
 
+This makes it easy to share and reproduce analyses.
+
+Now, what the heck is an "operator"?
+
+In BEAST, we name Operators all of the MCMC **proposals**.
+Example: how do you propose a new tree topology within the chain? Use a SubTreeSlide, NarrowExchange or Wilson-Balding operator.
+Each operator is given a **weight**, that tells BEAST how often to perform that particular proposal.
+
 ### General architecture
 ## The XML configuration file format
-
-## BEAGLE
-
 
 ## Using BEAST
 ```tcsh
 user@machine:~$ java -Xms64m -Xmx4096m -jar /path/to/beast -help
 ```
+## Developing stuff for BEAST: an example
+
+## References
+- BEAST: papers [1](http://www.biomedcentral.com/1471-2148/7/214) and [2](http://mbe.oxfordjournals.org/content/29/8/1969);
+- BEAGLE: [paper](http://sysbio.oxfordjournals.org/content/61/1/170)
+- BEAST2: [paper](http://journals.plos.org/ploscompbiol/article?id=10.1371/journal.pcbi.1003537)
