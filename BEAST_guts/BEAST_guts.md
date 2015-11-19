@@ -21,7 +21,7 @@ user@machine:~$ git clone git@github.com:beast-dev/beast-mcmc.git
 user@machine:~/beast-mcmc$ cd beast-mcmc/
 user@machine:~/beast-mcmc$ ant
 ```
-will build both `beast.jar` and `beauti.jar` in beast-mcmc/build/dist/ . 
+will build both `beast.jar` and `beauti.jar` in beast-mcmc/build/dist/. 
 
 This is what we informally call "BEAST 1", the original BEAST. 
 
@@ -37,6 +37,15 @@ BEAGLE brings substantial speed-ups in likelihood computation by efficiently usi
 BEAGLE is compatible with a range of phylogenetic software, such as BEAST, MrBayes, [PhyML](), and [Garli]().
 The gain in speed is so significant that most complex models in BEAST, such as phylogeography,  now depend exclusively on BEAGLE to run.
 
+### Using BEAST
+if you want to look at the options
+```bash
+user@machine:~$ java -Xms64m -Xmx4096m -jar /path/to/beast -help
+```
+A typical run would look something like this 
+```bash
+user@machine:~$ java -Xms64m -Xmx4096m -Djava.library.path=/path/to/beagle -jar /path/to/beast -beagle_SSE -threads 8 input.xml
+```
 
 ## How does it work?
 BEAST feeds on ~~souls~~ XML input files that are supposed specify everything you need to run MCMC and get a posterior distribution for your parameters:
@@ -56,12 +65,15 @@ Each operator is given a **weight**, that tells BEAST how often to perform that 
 In order to achieve better efficiency, some proposals in BEAST are **tunable**, which means their width (variance) can be adjusted such that we attain a certain acceptance probabiliy (usually around 0.234). We call this auto-optimise and it comes in two flavours: "default" and "log", which differ in how they relate proposal variance and acceptance probability.
 
 ### General architecture
+
+Being coded in JAVA, BEAST is naturally sort of modular. The wide array of different necessary components to allow the kind of model complexity BEAST offers, however, calls for some more deliberate modularity in order to avoid conflicts and broken dependencies. BEAST2, for instance, capitalises on the general routines developed for BEAST but has a much stronger focus on modularity.
+
+Ok, enough with the babbling. Let's go over to BEAST's [developer notes](https://code.google.com/p/beast-mcmc/wiki/DeveloperNotes) to take a look at the general internal structure.
+
 ## The XML configuration file format
 
-## Using BEAST
-```bash
-user@machine:~$ java -Xms64m -Xmx4096m -jar /path/to/beast -help
-```
+Now that we ~~kinda~~ know how BEAST works in the inside, let's talk about one of the most important features of BEAST: its E**X**tensible **M**arkup **L**anguage ([XML](https://en.wikipedia.org/wiki/XML)) input file specification.
+
 ## Developing stuff for BEAST: an example
 
 ## References
