@@ -15,6 +15,14 @@ The BEAST family also has two other honorary members:
 - [FigTree](http://beast.bio.ed.ac.uk/FigTree): A program for viewing trees including summary information produced by TreeAnnotator, a.k.a, "annotated" trees.
 
 In the [development repository](https://github.com/beast-dev/beast-mcmc) you will find the current ~~bug-prone~~  bleeding-edge version of BEAST.
+Supposing you want the dev version:
+```tcsh
+user@machine:~$  git clone git@github.com:beast-dev/beast-mcmc.git
+user@machine:~/beast-mcmc$ cd beast-mcmc/
+user@machine:~/beast-mcmc$ ant
+```
+will build both `beast.jar` and `beauti.jar` in beast-mcmc/build/dist/ . 
+
 ## How does it work?
 
 ## The XML configuration file format
