@@ -29,6 +29,13 @@ This is what we informally call "BEAST 1", the original BEAST.
 The development repo for BEAST2 sits [here](https://github.com/compevol/beast2).
 
 ## How does it work?
+BEAST feeds on ~~souls~~ XML input files that are supposed specify everything you need to run MCMC and get a posterior distribution for your parameters:
+- Data!
+- Likelihoods (i.e, models);
+- Priors;
+- Operators;
+- Number of iterations, sampling frequency and auto-optimisation options.
+
 ### General architecture
 ## The XML configuration file format
 
