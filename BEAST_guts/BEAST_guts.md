@@ -11,12 +11,12 @@ Programs distributed in the BEAST "bundle":
 - [TreeAnnotator](http://beast.bio.ed.ac.uk/TreeAnnotator): program for summarising the information in a sample of trees produced by BEAST.
 
 The BEAST family also has two other honorary members:
-- [Tracer](http://beast.bio.ed.ac.uk/Tracer): graphical program for analysing results from MCMC programs such as BEAST and MrBayes;
+- [Tracer](http://beast.bio.ed.ac.uk/Tracer): graphical program for analysing results from MCMC programs such as BEAST and [MrBayes](http://mrbayes.sourceforge.net/);
 - [FigTree](http://beast.bio.ed.ac.uk/FigTree): A program for viewing trees including summary information produced by TreeAnnotator, a.k.a, "annotated" trees.
 
 In the [development repository](https://github.com/beast-dev/beast-mcmc) you will find the current ~~bug-prone~~  bleeding-edge version of BEAST.
 Supposing you want the dev version:
-```tcsh
+```bash
 user@machine:~$ git clone git@github.com:beast-dev/beast-mcmc.git
 user@machine:~/beast-mcmc$ cd beast-mcmc/
 user@machine:~/beast-mcmc$ ant
@@ -25,10 +25,16 @@ will build both `beast.jar` and `beauti.jar` in beast-mcmc/build/dist/ .
 
 This is what we informally call "BEAST 1", the original BEAST. 
 
-[Alexei Drummond](http://compevol.auckland.ac.nz/dr-alexei-drummond/) and his team have developed [BEAST2](http://beast2.org/) that features a more modular, plugin-base architecture where users can contribute plugins implementing a plethora of phylogenetic models.
+[Alexei Drummond](http://compevol.auckland.ac.nz/dr-alexei-drummond/) and his team have developed [BEAST2](http://beast2.org/) that features a more modular, plugin-based architecture where users can contribute plugins implementing a plethora of phylogenetic models.
 The development repo for BEAST2 sits [here](https://github.com/compevol/beast2).
 
 ### BEAGLE
+
+Likelihood computations are costly. To address this, Daniel Ayres and peers have written the **B**road-platform **E**volutionary **A**nalysis **G**eneral **L**ikelihood **E**valuator (BEAGLE), a C library that provides "fine-scale parallelization while minimizing data transfer and memory copy overhead" (see paper).
+BEAGLE brings substantial speed-ups in likelihood computation by efficiently using multicore CPUs and modern bazillion-core graphical processing units (GPUs).
+BEAGLE is compatible with a range of phylogenetic software, such as BEAST, MrBayes, [PhyML](), and [Garli]().
+The gain in speed is so significant that most complex models in BEAST, such as phylogeography,  now depend exclusively on BEAGLE to run.
+
 
 ## How does it work?
 BEAST feeds on ~~souls~~ XML input files that are supposed specify everything you need to run MCMC and get a posterior distribution for your parameters:
@@ -38,7 +44,7 @@ BEAST feeds on ~~souls~~ XML input files that are supposed specify everything yo
 - Operators;
 - Number of iterations, sampling frequency and auto-optimisation options.
 
-This makes it easy to share and reproduce analyses.
+Having everything in the same place makes it easy to share and reproduce analyses.
 
 Now, what the heck is an "operator"?
 
@@ -50,7 +56,7 @@ Each operator is given a **weight**, that tells BEAST how often to perform that 
 ## The XML configuration file format
 
 ## Using BEAST
-```tcsh
+```bash
 user@machine:~$ java -Xms64m -Xmx4096m -jar /path/to/beast -help
 ```
 ## Developing stuff for BEAST: an example
