@@ -17,14 +17,19 @@ The BEAST family also has two other honorary members:
 In the [development repository](https://github.com/beast-dev/beast-mcmc) you will find the current ~~bug-prone~~  bleeding-edge version of BEAST.
 Supposing you want the dev version:
 ```tcsh
-user@machine:~$  git clone git@github.com:beast-dev/beast-mcmc.git
+user@machine:~$ git clone git@github.com:beast-dev/beast-mcmc.git
 user@machine:~/beast-mcmc$ cd beast-mcmc/
 user@machine:~/beast-mcmc$ ant
 ```
 will build both `beast.jar` and `beauti.jar` in beast-mcmc/build/dist/ . 
 
-## How does it work?
+This is what we informally call "BEAST 1", the original BEAST. 
 
+[Alexei Drummond](http://compevol.auckland.ac.nz/dr-alexei-drummond/) and his team have developed [BEAST2](http://beast2.org/) that features a more modular, plugin-base architecture where users can contribute plugins implementing a plethora of phylogenetic models.
+The development repo for BEAST2 sits [here](https://github.com/compevol/beast2).
+
+## How does it work?
+### General architecture
 ## The XML configuration file format
 
 ## BEAGLE
