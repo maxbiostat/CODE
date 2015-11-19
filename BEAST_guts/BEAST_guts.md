@@ -146,6 +146,39 @@ Further adjustments to the "priors" and "log" blocks would follow in a similar f
 This is what I would call the _trivial_ extensibility of BEAST. Let's now look at a slightly less trivial way of extending BEAST.
 
 ## Developing stuff for BEAST: an example
+Imagine we want to contribute a new tree proposal (move) to BEAST. 
+Suppose that for some twisted reason the name of such move is ``SubtreeJump``.
+Following the guidelines seen above when we visited the [developer notes](https://code.google.com/p/beast-mcmc/wiki/DeveloperNotes) we will place our new class ``SubTreeJumpOperator.java`` inside ``dr.evomodel.operators``.
+The first lines of which would look something like
+```java
+package dr.evomodel.operators;
+
+import dr.evolution.tree.NodeRef;
+import dr.evolution.tree.Tree;
+import dr.evomodel.tree.TreeModel;
+import dr.evomodelxml.operators.SubtreeJumpOperatorParser;
+import dr.inference.operators.*;
+import dr.math.MathUtils;
+
+import java.util.ArrayList;
+import java.util.List;
+
+/**
+ * Implements the Subtree Jump move.
+ *
+ * @author Andrew Rambaut <- May want to change this. If not, Andrew won't mind (I think) ;0)
+ * @version $Id$
+ */
+public class SubtreeJumpOperator extends AbstractTreeOperator implements CoercableMCMCOperator {
+...
+```
+So in the end, one can just add 
+```xml
+<subtreeJump  size="1.0" weight="36">
+    <treeModel idref="treeModel"/>
+</subtreeJump>
+```
+to their XML to use the new operator.
 
 ## References
 - BEAST: papers [1](http://www.biomedcentral.com/1471-2148/7/214) and [2](http://mbe.oxfordjournals.org/content/29/8/1969);
