@@ -53,6 +53,7 @@ Now, what the heck is an "operator"?
 In BEAST, we name Operators all of the MCMC **proposals**.
 Example: how do you propose a new tree topology within the chain? Use a SubTreeSlide, NarrowExchange or Wilson-Balding operator.
 Each operator is given a **weight**, that tells BEAST how often to perform that particular proposal.
+In order to achieve better efficiency, some proposals in BEAST are **tunable**, which means their width (variance) can be adjusted such that we attain a certain acceptance probabiliy (usually around 0.234). We call this auto-optimise and it comes in two flavours: "default" and "log", which differ in how they relate proposal variance and acceptance probability.
 
 ### General architecture
 ## The XML configuration file format
