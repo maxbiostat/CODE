@@ -21,7 +21,7 @@ user@machine:~$ git clone git@github.com:beast-dev/beast-mcmc.git
 user@machine:~/beast-mcmc$ cd beast-mcmc/
 user@machine:~/beast-mcmc$ ant
 ```
-will build both `beast.jar` and `beauti.jar` in beast-mcmc/build/dist/. 
+will build both `beast.jar` and `beauti.jar` in beast-mcmc/build/dist/.
 
 This is what we informally call "BEAST 1", the original BEAST. 
 
@@ -35,7 +35,7 @@ For doubts and general troubleshooting (after RTFM), see the [user group](https:
 Likelihood computations are costly. To address this, Daniel Ayres and peers have written the **B**road-platform **E**volutionary **A**nalysis **G**eneral **L**ikelihood **E**valuator (BEAGLE), a C library that provides "fine-scale parallelization while minimizing data transfer and memory copy overhead" (see [paper](http://sysbio.oxfordjournals.org/content/61/1/170)).
 BEAGLE brings substantial speed-ups in likelihood computation by efficiently using multicore CPUs and modern bazillion-core graphical processing units (GPUs).
 BEAGLE is compatible with a range of phylogenetic software, such as BEAST, MrBayes, [PhyML](), and [Garli]().
-The gain in speed is so significant that most complex models in BEAST, such as phylogeography,  now depend exclusively on BEAGLE to run.
+The gain in speed is so significant that most complex models in BEAST, such as phylogeography,  now depend exclusively on BEAGLE to run.  See this [post](http://francoismichonneau.net/2014/05/how-to-install-beagle-on-ubuntu/) for a nice guide on how to get BEAGLE up and running.
 
 ### Using BEAST
 if you want to look at the options
@@ -48,6 +48,7 @@ user@machine:~$ java -Xms64m -Xmx4096m -Djava.library.path=/path/to/beagle -jar 
 ```
 
 ## How does it work?
+
 BEAST feeds on ~~souls~~ XML input files that are supposed specify everything you need to run MCMC and get a posterior distribution for your parameters:
 - Data!
 - Likelihoods (i.e, models);
@@ -70,9 +71,11 @@ Being coded in JAVA, BEAST is naturally sort of modular. The wide array of diffe
 
 Ok, enough with the babbling. Let's go over to BEAST's [developer notes](https://code.google.com/p/beast-mcmc/wiki/DeveloperNotes) to take a look at the general internal structure.
 
-## The XML configuration file format
+## The XML configuration file format 
 
 Now that we ~~kinda~~ know how BEAST works in the inside, let's talk about one of the most important features of BEAST: its E**X**tensible **M**arkup **L**anguage ([XML](https://en.wikipedia.org/wiki/XML)) input file specification.
+Knowing your way around the XML syntax is important because the graphical utility for building XMLs is not nearly exhaustive. Thus, many of the interesting models are only available through manually editing the XMLs. 
+
 
 ## Developing stuff for BEAST: an example
 
