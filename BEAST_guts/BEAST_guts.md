@@ -124,10 +124,10 @@ Of course, this calls for changes in the operators, with
 ```xml
 ...
 <scaleOperator scaleFactor="0.75" weight="3">
-			<parameter idref="ucld.mean"/>
-		</scaleOperator>
-		<scaleOperator scaleFactor="0.75" weight="3">
-			<parameter idref="ucld.stdev"/>
+	<parameter idref="ucld.mean"/>
+</scaleOperator>
+<scaleOperator scaleFactor="0.75" weight="3">
+	<parameter idref="ucld.stdev"/>
 </scaleOperator>
 ...
 ```
@@ -135,10 +135,10 @@ becoming
 ```xml
 ...
 <scaleOperator scaleFactor="0.75" weight="3">
-			<parameter idref="ucg.shape"/>
-		</scaleOperator>
-		<scaleOperator scaleFactor="0.75" weight="3">
-			<parameter idref="ucg.scale"/>
+	<parameter idref="ucg.shape"/>
+</scaleOperator>
+<scaleOperator scaleFactor="0.75" weight="3">
+	<parameter idref="ucg.scale"/>
 </scaleOperator>
 ...
 ```
