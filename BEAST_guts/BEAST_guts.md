@@ -28,9 +28,11 @@ This is what we informally call "BEAST 1", the original BEAST.
 [Alexei Drummond](http://compevol.auckland.ac.nz/dr-alexei-drummond/) and his team have developed [BEAST2](http://beast2.org/) that features a more modular, plugin-based architecture where users can contribute plugins implementing a plethora of phylogenetic models.
 The development repo for BEAST2 sits [here](https://github.com/compevol/beast2).
 
+For doubts and general troubleshooting (after RTFM), see the [user group](https://groups.google.com/forum/#!forum/beast-users).
+
 ### BEAGLE
 
-Likelihood computations are costly. To address this, Daniel Ayres and peers have written the **B**road-platform **E**volutionary **A**nalysis **G**eneral **L**ikelihood **E**valuator (BEAGLE), a C library that provides "fine-scale parallelization while minimizing data transfer and memory copy overhead" (see paper).
+Likelihood computations are costly. To address this, Daniel Ayres and peers have written the **B**road-platform **E**volutionary **A**nalysis **G**eneral **L**ikelihood **E**valuator (BEAGLE), a C library that provides "fine-scale parallelization while minimizing data transfer and memory copy overhead" (see [paper](http://sysbio.oxfordjournals.org/content/61/1/170)).
 BEAGLE brings substantial speed-ups in likelihood computation by efficiently using multicore CPUs and modern bazillion-core graphical processing units (GPUs).
 BEAGLE is compatible with a range of phylogenetic software, such as BEAST, MrBayes, [PhyML](), and [Garli]().
 The gain in speed is so significant that most complex models in BEAST, such as phylogeography,  now depend exclusively on BEAGLE to run.
