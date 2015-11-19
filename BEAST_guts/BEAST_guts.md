@@ -165,12 +165,33 @@ import java.util.List;
 
 /**
  * Implements the Subtree Jump move.
- *
- * @author Andrew Rambaut <- May want to change this. If not, Andrew won't mind (I think) ;0)
+ * @author
  * @version $Id$
  */
 public class SubtreeJumpOperator extends AbstractTreeOperator implements CoercableMCMCOperator {
 ...
+}
+```
+Now, we need to write an XML parser for the new operator, to take in the specs it needs, in this case ``size`` and ``weight``.
+This parser class, unsurprisingly called ``SubtreeJumpOperatorParser.java`` is to be placed  in ``dr.evomodelxml.operators`` and looks like this 
+```java
+package dr.evomodelxml.operators;
+
+import dr.evomodel.operators.SubtreeJumpOperator;
+import dr.evomodel.operators.SubtreeSlideOperator;
+import dr.evomodel.tree.TreeModel;
+import dr.inference.operators.CoercableMCMCOperator;
+import dr.inference.operators.CoercionMode;
+import dr.inference.operators.MCMCOperator;
+import dr.xml.*;
+
+public class SubtreeJumpOperatorParser extends AbstractXMLObjectParser {
+
+    public static final String SUBTREE_JUMP = "subtreeJump";
+
+    public String getParserName() {
+        return SUBTREE_JUMP;
+    } ...
 ```
 So in the end, one can just add 
 ```xml
