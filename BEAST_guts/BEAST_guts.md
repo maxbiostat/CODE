@@ -75,7 +75,74 @@ Ok, enough with the babbling. Let's go over to BEAST's [developer notes](https:/
 
 Now that we ~~kinda~~ know how BEAST works in the inside, let's talk about one of the most important features of BEAST: its E**X**tensible **M**arkup **L**anguage ([XML](https://en.wikipedia.org/wiki/XML)) input file specification.
 Knowing your way around the XML syntax is important because the graphical utility for building XMLs is not nearly exhaustive. Thus, many of the interesting models are only available through manually editing the XMLs. 
+First, let's look at a [BEAUti-constructed XML](https://github.com/maxbiostat/CODE/blob/master/BEAST_guts/dengue_example.xml). Now let's mess round a bit.
 
+Suppose we want a Gamma distribution for the clock model, that is, we want to model the among-branch variation with a Gamma distribution rather than, say, a lognormal.
+
+We would then need to change 
+
+```xml
+<!-- The uncorrelated relaxed clock (Drummond, Ho, Phillips & Rambaut (2006) PLoS Biology 4, e88 )-->
+	<discretizedBranchRates id="branchRates">
+		<treeModel idref="treeModel"/>
+		<distribution>
+			<logNormalDistributionModel meanInRealSpace="true">
+				<mean>
+					<parameter id="ucld.mean" value="0.001" lower="0.0"/>
+				</mean>
+				<stdev>
+					<parameter id="ucld.stdev" value="0.3333333333333333" lower="0.0"/>
+				</stdev>
+			</logNormalDistributionModel>
+		</distribution>
+		<rateCategories>
+			<parameter id="branchRates.categories"/>
+		</rateCategories>
+	</discretizedBranchRates>
+```
+with something like
+
+```xml
+	<!-- The uncorrelated  Gamma relaxed clock -->
+	<discretizedBranchRates id="branchRates">
+		<treeModel idref="treeModel"/>
+		<distribution>
+			<gammaDistributionModel offset="0.0">
+				<shape>
+					<parameter id="ucg.shape" value="1.0" lower="0.0"/>
+				</shape>
+				<scale>
+					<parameter id="ucg.scale" value="0.001" lower="0.0"/>
+				</scale>
+			</gammaDistributionModel>
+		</distribution>
+		<rateCategories>
+			<parameter id="branchRates.categories"/>
+		</rateCategories>
+```
+Of course, this calls for changes in the operators, with
+```xml
+...
+<scaleOperator scaleFactor="0.75" weight="3">
+			<parameter idref="ucld.mean"/>
+		</scaleOperator>
+		<scaleOperator scaleFactor="0.75" weight="3">
+			<parameter idref="ucld.stdev"/>
+</scaleOperator>
+...
+```
+becoming 
+```xml
+...
+<scaleOperator scaleFactor="0.75" weight="3">
+			<parameter idref="ucg.shape"/>
+		</scaleOperator>
+		<scaleOperator scaleFactor="0.75" weight="3">
+			<parameter idref="ucg.scale"/>
+</scaleOperator>
+...
+```
+Further adjustments to the priors and log blocks would follow in a similar fashion.
 
 ## Developing stuff for BEAST: an example
 
