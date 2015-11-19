@@ -1,11 +1,7 @@
 # BEAST
 
 ## What is it?
-```python
-s = "Python syntax highlighting"
-print s
-```
-
+**B**ayesian **E**volutionary **A**nalysis by **S**ampling **T**rees
 ```tcsh
 user@machine:~$ java -Xms64m -Xmx4096m -jar /path/to/beast -help
 ```
