@@ -69,7 +69,22 @@ In order to achieve better efficiency, some proposals in BEAST are **tunable**, 
 
 Being coded in JAVA, BEAST is naturally sort of modular. The wide array of different necessary components to allow the kind of model complexity BEAST offers, however, calls for some more deliberate modularity in order to avoid conflicts and broken dependencies. BEAST2, for instance, capitalises on the general routines developed for BEAST but has a much stronger focus on modularity.
 
-Ok, enough with the babbling. Let's go over to BEAST's [developer notes](https://code.google.com/p/beast-mcmc/wiki/DeveloperNotes) to take a look at the general internal structure.
+Ok, enough with the babbling. Let's take a look at BEAST's internal structure, borrowing ~~very~~ heavily from the [developer notes](https://code.google.com/p/beast-mcmc/wiki/DeveloperNotes).
+
+In order to avoid circular dependencies between packages, certain packages are intended as global utility classes (``feel free to add stuff to them but consider whether they may be useful to other classes``):
+- ``dr.maths`` / ``dr.stats`` / ``dr.utils`` are low level utility packages and should have no dependencies on the packages below;
+- ``dr.inference`` comprises generic MCMC routines and should have no dependencies on the _biological_ packages (``dr.evolution`` and ``dr.evomodel``). Notably, things like **priors**, **operators** are generic ones that work on continuous parameters not biology specific ones;
+-  ``dr.evolution`` is basic evolutionary stuff and should have no dependencies on ``dr.evomodel`` or ``dr.inference``;
+-  ``dr.evomodel`` is where all BEAST-specific stuff should go - this ties together the biology in ``dr.evolution`` into the inference engine in ``dr.inference``.
+
+**~~Plugins~~**
+
+If you're developing a whole new set of classes implementing a particular model, it is probabiliy desirable to "package" them together rather than distribute classes all over the place. Your best bet is to create all of your stuff inside ``dr.evomodel``. This was the germ of the plugin-based architecture of BEAST2, that allowed a range of model extensions to be [developed](http://beast2.org/beast-features/).
+
+**Parsers**
+- From now, any parser not ready for release should stay in development_parser.properties. Once it is ready for release, it should be moved into release parser.properties.
+-  Any parser has to be implemented by an individual java class extended from ``AbstractXMLObjectParser`` and named by model name + Parser. If there are multi-parsers referring to one model class, they can be included in one parser class and each parser has its own inner class extended from ``AbstractXMLObjectParser``.
+-  Model in dr.evolution = parser in ``dr.evoxml``,  model in ``dr.evomodel`` = parser in ``dr.evomodelxml``, model in ``dr.inference`` = parser in ``dr.inferencexml``.
 
 ## The XML configuration file format 
 
