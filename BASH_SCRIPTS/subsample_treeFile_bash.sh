@@ -1,10 +1,12 @@
 #!/bin/bash
-## Usage: enter a tree file ($1), what's the "end of heading" line ($2) and how many trees ($3) you want and the output file name ($4)
-## TODO: find out a way of automatically determining $2
+## Usage: enter a tree file ($1), how many trees ($2) you want and the output file name ($3)
 name=$(echo $1)
-output=$4
-head -n$2 $name > head.parttree
-tail -n$(expr $3 + 1) $name > tail.parttree
+ntaxa=$(grep ntax $name |  cut -d'=' -f2 |  sed s/\;//)
+# nlines=$(expr 2*$ntaxa + 11)
+nlines=`echo "2*$ntaxa + 11" | bc -l`
+output=$3
+head -n$nlines $name > head.parttree
+tail -n$(expr $2 + 1) $name > tail.parttree
 cat head.parttree > $output
 cat tail.parttree >> $output
 blocksize=$(grep "End" $name| wc -l)
