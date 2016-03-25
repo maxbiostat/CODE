@@ -5,7 +5,7 @@ RDV <- function(tree) diag(vcv.phylo(tree)) ## Extract root-to-tip divergences
 get.ages <- function(tree)  as.numeric(unlist(lapply(strsplit(tree$tip.label, "_"), function(x) x[3])))
 #################
 reroot.p <- function(tree, node.number, proportion){ ## re-roots the tree at a node, splitting the branch at a particular 'proportion'
-  if(node.number>length(tree$tip)){
+  if(node.number>length(tree$tip)){## Thanks to Liam Revell (UMass) for the code snippet
     tr <- root(tree, node = node.number, resolve.root = TRUE)
     b <- sum(tr$edge.length[tr$edge == (Ntip(tree) + 1)])
     position <- proportion*b
@@ -85,11 +85,11 @@ get.alpha <- function(tr, node, loss = "residuals"){ ## Extracts the necessary c
                                   inode = node, tr = Tree, loss = loss)))
 }
 #################
-find_best_rooting <- function(tree, heuristics = FALSE, loss = "residuals", Optim = FALSE){ ## Main function that wraps that up
+find_best_rooting <- function(tree, heuristics = FALSE, loss = "residuals", Optim = FALSE, debug = FALSE){ ## Main function that wraps that up
   #### Begin documentation ########
   # tree = a phylogenetic tree with well formatted tip.labels.
   # WARNING: PLEASE modify the function get.ages() to ensure it works for your tip labels!
-  # Note: vy default, it expects labels to be separated by a '_'  and the date to be the THIRD field.
+  # Note: by default, it expects labels to be separated by a '_'  and the date to be the THIRD field.
   # heuristics = try only old branches/nodes? Potentially speeds up things.
   # what kind of 'loss' to use? Options are mean squared 'residuals', 'correlation' or 'Rsquared'.
   # 'Optim': use numerical optimisation? Defaults to FALSE and uses an analytical solution instead.
@@ -102,7 +102,7 @@ find_best_rooting <- function(tree, heuristics = FALSE, loss = "residuals", Opti
   if(Optim){
     best.ps <- lapply(nodes,
                       function(j){
-                        cat("Doing node", j, "\n")
+                        if(debug) cat("Doing node", j, "\n")
                         return(optimise(opt.p.branch, c(0, 1), tol = 1E-8, inode = j, tr = tree, loss = loss))
                       }
     ) 
@@ -111,7 +111,7 @@ find_best_rooting <- function(tree, heuristics = FALSE, loss = "residuals", Opti
   }else{
     best.ps <- lapply(nodes,
                       function(j){
-                        cat("Doing node", j, "\n")
+                       if(debug) cat("Doing node", j, "\n")
                         return(get.alpha(tr = tree, node = j))
                       }
     ) 
@@ -122,13 +122,26 @@ find_best_rooting <- function(tree, heuristics = FALSE, loss = "residuals", Opti
   cand.nodes <- nodes[which(loss.nodes == min.nodes)]
   cand.ps <- node.p[which(loss.nodes == min.nodes)]
   result.tree <- reroot.p(tree, node = max(cand.nodes),  proportion = node.p[match(max(cand.nodes), nodes)])
-  result.reg <- lm(RDV(result.tree)~get.ages(result.tree)) 
-  return(
-    list(minObj = min.nodes,
-         possibleNodes = cand.nodes,
-         losses = loss.nodes,
-         best.root.node = max(cand.nodes), lm = result.reg, tree = result.tree,
-         proportion = node.p[match(max(cand.nodes), nodes)],
-         table = data.frame(rdv = RDV(result.tree), dates = get.ages(result.tree), residuals = result.reg$residuals))
-  )  
+  rdv <- RDV(result.tree)
+  ages <- get.ages(result.tree)
+  result.reg <- lm(rdv~ages) 
+  if(debug){
+    return(
+      list(minObj = min.nodes,
+           possibleNodes = cand.nodes,
+           losses = loss.nodes,
+           proportions = cand.ps,
+           best.root.node = max(cand.nodes), lm = result.reg, tree = result.tree,
+           proportion = node.p[match(max(cand.nodes), nodes)],
+           table = data.frame(rdv = rdv, dates = ages, residuals = result.reg$residuals))
+    )  
+  }else{
+    return(
+      list(best.root.node = max(cand.nodes), lm = result.reg, tree = result.tree,
+           proportion = node.p[match(max(cand.nodes), nodes)],
+           table = data.frame(rdv = rdv,
+                              dates = ages,
+                              residuals = result.reg$residuals))
+    )  
+  }
 } 
