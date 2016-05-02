@@ -31,7 +31,7 @@ opt.p.branch <- function(p, inode, tr, loss = "residuals"){ # takes a proportion
   dates <- get.ages(tree = temp.tree)
   temp.rdvs <- RDV(temp.tree)
   reg <- lm(temp.rdvs~dates)
-  if(coef(reg)[2]<0 || is.na(coef(reg)[2]){
+  if(coef(reg)[2]<0 || is.na(coef(reg)[2])){
     return(Inf)
   }else{
     # begin loss function test
