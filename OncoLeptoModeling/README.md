@@ -2,7 +2,7 @@ This repository contains the code to produce some of the figures and analyses in
 
 **Code availabilty**
 Please feel free to do whatever you want with these scripts, but bear in mind they were written for a custom application and therefore may contain monstrous hacks just to make things work.
-Please see https://github.com/phylogeography/DeepRoot/blob/master/README.md for a suitable licence.
+Please see [here](https://github.com/phylogeography/DeepRoot/blob/master/README.md) for a suitable licence.
 
 **Data availability**
 Please note that the data in this repository are not public yet, and are there only to make possible the generation of the figures and analyses.
