@@ -16,16 +16,22 @@ conf.band <- function(x, sd, alpha){
 }
 
 bands <- conf.band(p,se.p,.05)
-bigdt <- data.frame(ovi,p,bands)
-bigdt$Infectious_status <- factor(ifelse(bigdt$STATUS==0,1,0),
-                                  labels=c("Infected", "Uninfected"))# monstruous trick to fool ggplot
+bigdt <- data.frame(ovi, p, bands)
+bigdt$Infection_status <- factor(ifelse(bigdt$STATUS==0,1,0),
+                                  labels = c("Infected", "Uninfected"))# monstruous trick to fool ggplot
 #
 pdf(file = "figs/oviposition.pdf")
 ggplot(bigdt, aes(x = DAY, y = p)) +
+  ggtitle("Oviposition versus infection status") + 
   geom_ribbon(aes(ymin = lwr, ymax = upr, fill =  as.factor(ifelse(STATUS==0, 1, 0))), alpha = 0.2) +
-  scale_x_continuous("Time (days)") +
-  scale_y_continuous("Eggs per female") +
-  guides(fill=FALSE)+
-  geom_line(aes(colour = Infectious_status), size = 1)+
-  labs(fill="Infectious status")
+  scale_x_continuous("Time (days)", expand = c(0, 0)) +
+  scale_y_continuous("Eggs per female", expand = c(0, 0)) +
+  guides(fill = FALSE)+
+  geom_line(aes(colour = Infection_status), size = 1)+
+  labs(fill="Infection status") +
+  theme_bw() +
+  theme(axis.text = element_text(size = 16, face = "bold"),
+        plot.title = element_text(size = 18, face = "bold"),
+        legend.text = element_text(size = 15),
+        axis.title = element_text(size = 18, face = "bold"))
 dev.off()

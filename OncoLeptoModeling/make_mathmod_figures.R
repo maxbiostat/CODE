@@ -64,43 +64,55 @@ pal2 <- c("red", "blue", "green", "black", "darkgreen", "darkmagenta", "dodgerbl
 
 ## WithOUT SD
 # Trajectories ratios
-tiff("figs/popratios_noSD.tiff", width = 15, height = 10, units = "cm", res = 500)
+tiff("figs/popratios_noSD.tiff", width = 20, height = 10, units = "cm", res = 500)
 matplot(times, out.inf/out.ref, type = "l", xlab = "Time (days)", ylab = "Relative population size",
-        main = "", lwd = 2, ylim = c(0, 3), lty = 1, cex.axis = 1.5, cex.lab = 1.5,
+        main = "Infected/Uninfected ratio projections w/o sex difference", lwd = 2,
+        ylim = c(0, 2), lty = 1, cex.main = 1.5, cex.axis = 2, cex.lab = 1.5,
         bty = "l", col = pal1)
 abline(h = 1, lty = 2, lwd = 1)
-legend(x = 30, y = 3 , legend = c("Eggs", "Stage_1", "Stage_2", "Stage_3"), 
-       lwd = 2, cex = 1, col = pal1[1:3], horiz = FALSE, bty = "n") 
-legend(x = 47 , y = 3 , legend = c("Stage_4", "Stage_5", "Adults"),
-       lwd = 2, cex = .8, col = pal1[4:7], horiz = FALSE, bty = "n")
+legend(x = 10, y = 2, legend = c("Eggs", "Stage_1"), 
+       pch = 20, col = pal2[1:2], horiz = FALSE, bty = "n", cex = 1.3) 
+legend(x = 22, y = 2, legend = c("Stage_2", "Stage_3"), 
+       pch = 20, col = pal2[3:4], horiz = FALSE, bty = "n", cex = 1.3) 
+legend(x = 34, y = 2, legend = c("Stage_4", "Stage_5"), 
+       pch = 20, col = pal2[5:6], horiz = FALSE, bty = "n", cex = 1.3) 
+legend(x = 46 , y = 2, legend = c("Adults"),
+       pch = 20, col = pal2[7], horiz = FALSE, bty = "n", cex = 1.3)
 dev.off()
 # Total population
-tiff("figs/totalpop_noSD.tiff", width = 15, height = 10, units = "cm", res = 500)
+tiff("figs/totalpop_noSD.tiff", width = 20, height = 10, units = "cm", res = 500)
 plot(times, log(popref), col = 3,  lwd = 3, type = "l",
-     ylab = "(log)Population size", xlab = "Time (days)", cex.axis = 1.5, cex.lab = 1.5)
+     main = "Population size predictions w/o sex difference",
+     ylab = "(log)Population size", xlab = "Time (days)",
+     cex.main = 1.5, cex.axis = 2, cex.lab = 1.5)
 lines(times, log(popinf), lwd = 3, col = 2)
 legend(x = "topleft", col = c(2, 3), legend = c("Infected", "Uninfected"),
-       lwd = 3, bty = "n")
+       lwd = 3, bty = "n", cex = 1.5)
 dev.off()
-
 ## With SD
 # Trajectories ratios
-tiff("figs/popratios_SD.tiff", width = 15, height = 10, units = "cm", res = 500)
+tiff("figs/popratios_SD.tiff", width = 20, height = 10, units = "cm", res = 500)
 matplot(times, out.SD.inf/out.SD.ref, type = "l", xlab = "Time (days)", ylab = "Relative population size",
-        main = "", lwd = 2, ylim = c(0, 3), lty = 1, cex.axis = 1.5, cex.lab = 1.5,
+        main = "Infected/Uninfected ratio projection with sex difference", lwd = 2,
+        ylim = c(0, 2), lty = 1, cex.main = 1.5, cex.axis = 2, cex.lab = 1.5,
         bty = "l", col = pal2)
 abline(h = 1, lty = 2, lwd = 1)
-legend(x = 30, y = 3 , legend = c("Eggs", "Stage_1", "Stage_2", "Stage_3"), 
-       lwd = 2, cex = 1, col = pal2[1:3], horiz = FALSE, bty = "n") 
-legend(x = 47 , y = 3 , legend = c("Stage_4", "Stage_5","Females", "Males"),
-       lwd = 2, cex = .8, col = pal2[4:8], horiz = FALSE, bty = "n")
+legend(x = 10, y = 2, legend = c("Eggs", "Stage_1"), 
+       pch = 20, col = pal2[1:2], horiz = FALSE, bty = "n", cex = 1.3) 
+legend(x = 22, y = 2, legend = c("Stage_2", "Stage_3"), 
+       pch = 20, col = pal2[3:4], horiz = FALSE, bty = "n", cex = 1.3) 
+legend(x = 34, y = 2, legend = c("Stage_4", "Stage_5"), 
+       pch = 20, col = pal2[5:6], horiz = FALSE, bty = "n", cex = 1.3) 
+legend(x = 46 , y = 2, legend = c("Females", "Males"),
+       pch = 20, col = pal2[7:8], horiz = FALSE, bty = "n", cex = 1.3)
 dev.off()
 # Total population
-tiff("figs/totalpop_SD.tiff", width = 15, height = 10, units = "cm", res = 500)
+tiff("figs/totalpop_SD.tiff", width = 20, height = 10, units = "cm", res = 500)
 plot(times, log(poprefSD), col = 3,  lwd = 3, type = "l",
-     ylab = "(log)Population size", xlab = "Time (days)", cex.axis = 1.5, cex.lab = 1.5)
+    main = "Population size predictions with sex difference",
+     ylab = "(log)Population size", xlab = "Time (days)",
+    cex.main = 1.5, cex.axis = 2, cex.lab = 1.5)
 lines(times, log(popinfSD), lwd = 3, col = 2)
 legend(x = "topleft", col = c(2, 3), legend = c("Infected", "Uninfected"),
-       lwd = 3, bty = "n")
+       lwd = 3, bty = "n", cex = 1.5)
 dev.off()
-

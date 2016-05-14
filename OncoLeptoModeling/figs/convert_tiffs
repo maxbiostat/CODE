@@ -1,0 +1,9 @@
+for file in *.tiff
+do
+name=$(echo $file)
+parts=${name//./}
+size=${#parts[@]}
+stem0=${parts[size-1]}
+stem=${stem0//tiff/}
+ tiff2pdf -o $stem.pdf $file
+done
