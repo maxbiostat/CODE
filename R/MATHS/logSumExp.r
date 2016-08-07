@@ -13,11 +13,10 @@ stabLogSumExp <- function(x){
   return(z)
 }
 ###
-test.small <- c(13, 15, 17, 19)
+test.small <- c(3, 5, 7, 9)
 naiveLogSumExp(test.small)
 stabLogSumExp(test.small)
 
-test.big <- c(1E+13, 1E+15, 1E+17, 1E+19)
+test.big <- c(130, 150,170, 190)
 naiveLogSumExp(test.big)
 stabLogSumExp(test.big)
-
