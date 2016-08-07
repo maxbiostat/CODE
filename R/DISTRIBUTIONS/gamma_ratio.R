@@ -31,3 +31,4 @@ entropy.gamma.ratio <- function(k1, t1, k2, t2, N){
 # mean =  (k1/(k2-1))*(t1*N/t2)
 # mode = {(k1-1)*t1*N}/{t2*(k2+1)}
 # var = ((N*t1/t2)^2)* (k1*(k1+k2-1))/((k2-2)*(k2-1)^2)
+# concavity_bound = N*t1*sqrt(k1-1)/(t2*sqrt(k1+k2)) * 1/(1-(sqrt(k1-1)/sqrt(k1+k2))) ## density is only concave for R_0 < concavity_bound
