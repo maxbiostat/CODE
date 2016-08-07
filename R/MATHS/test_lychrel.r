@@ -5,7 +5,7 @@
 Lychrel <- function(x, itLimit = 1E+7){ ## play until find a palindrome
   require(Rmpfr)
   splitDigits <- function(n) {## get the digits
-    stringz <- strsplit(Rmpfr::formatMpfr(mpfr(n, precBits = 1024 ), 1000), "\\.")[[1]][1]
+    stringz <- strsplit(Rmpfr::formatMpfr(mpfr(n, precBits = 4096), 1000), "\\.")[[1]][1]
     return(as.numeric(strsplit(stringz, "")[[1]]))
   }
   collapseDigits <- function(v) as.numeric(paste(v, collapse = "")) ## get the number back
