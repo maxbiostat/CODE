@@ -1,10 +1,12 @@
 ### Test inverse CDF random variable generation for a type-2 Gumbel distribution
 ### See also https://arxiv.org/pdf/1403.4630.pdf for the motivation behind U and alpha
+## TODO: add pgumbel2, qgumbel2, etc.
 dgumbel2 <- function(x, a, b, log = FALSE){
   ans <- log(a) + log(b) -( a + 1)*x -b*x^-a
     if(!log) ans <- exp(ans)
   return(ans)
 }
+dgumbel2 <- Vectorize(dgumbel2)
 #
 rgumbel2 <- function(n, a, b){
   p <- runif(n)
